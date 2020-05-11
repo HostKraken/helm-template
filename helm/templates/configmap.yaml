@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: REPLACE-configmap
+data:
+  database-migration.sh: |
+    set -x
+    sleep 15
+    if [[ -f /usr/html/database_migration ]]; then
+      if [ "`echo /database/*.sql`" != "/database/*.sql" ]; then
+          for sqlscript in $(ls /database/*.sql); do
+              mysql -h 127.0.0.1 -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME <$sqlscript
+          done
+          rm /usr/html/database_migration
+      fi
+      unset DATABASE_USER
+      unset DATABASE_PASS
+      unset DATABASE_NAME
+    fi
+
+  wp-config.php: |
+    <?php 
+    /* MySQL settings */
+    define( 'DB_NAME',     '{{ .Values.database.name }}' );
+    define( 'DB_USER',     '{{ .Values.database.user }}' );
+    define( 'DB_PASSWORD', '{{ .Values.database.pass }}' );
+    define( 'DB_HOST',     '127.0.0.1' );
+    define( 'DB_CHARSET',  'utf8' );
+    #define('FORCE_SSL_ADMIN', true);
+    #define('SITE_URL', "https://{{ .Values.site_url }}");
+    /* MySQL database table prefix. */
+    $table_prefix = 'wp_';
+    //Begin Really Simple SSL Load balancing fix
+    if ((isset($_ENV["HTTPS"]) && ("on" == $_ENV["HTTPS"]))
+    || (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "1") !== false))
+    || (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "on") !== false))
+    || (isset($_SERVER["HTTP_CF_VISITOR"]) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https") !== false))
+    || (isset($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"], "https") !== false))
+    || (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_X_FORWARDED_PROTO"], "https") !== false))
+    || (isset($_SERVER["HTTP_X_PROTO"]) && (strpos($_SERVER["HTTP_X_PROTO"], "SSL") !== false))
+    ) {
+      $_SERVER["HTTPS"] = "on";
+    }
+    //END Really Simple SSL 
+
+    /* Authentication Unique Keys and Salts. */
+    /* https://api.wordpress.org/secret-key/1.1/salt/ */
+    define( 'AUTH_KEY',         'put your unique phrase here' );
+    define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
+    define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
+    define( 'NONCE_KEY',        'put your unique phrase here' );
+    define( 'AUTH_SALT',        'put your unique phrase here' );
+    define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
+    define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
+    define( 'NONCE_SALT',       'put your unique phrase here' );
+
+
+    /* Absolute path to the WordPress directory. */
+    if ( !defined('ABSPATH') )
+      define('ABSPATH', dirname(__FILE__) . '/');
+
+    /* Sets up WordPress vars and included files. */
+    require_once(ABSPATH . 'wp-settings.php');

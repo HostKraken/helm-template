@@ -1,0 +1,35 @@
+---
+kind: pipeline
+type: kubernetes
+name: default
+
+steps:
+
+- name: build
+  image: plugins/docker
+  settings:
+    registry: registry.digitalocean.com
+    repo: registry.digitalocean.com/business-business/REPLACE
+    tags:
+      - ${DRONE_COMMIT_SHA:0:7}
+      - ${DRONE_COMMIT_BRANCH}
+      - latest
+    force_tag: true
+    use_cache: true
+    username: e6e9609702361b3b96d40685e3ac8d0a1894bca87a8ea3df3f9ca9d4e8e21a82
+    password: e6e9609702361b3b96d40685e3ac8d0a1894bca87a8ea3df3f9ca9d4e8e21a82
+  volumes:
+    - name: docker
+      path: /var/lib/docker  
+
+- name: deploy
+  image: alpine/helm
+  commands:
+    - helm list
+    - cd helm && helm upgrade --install REPLACE . -n wordpress --recreate-pods
+
+image_pull_secrets:
+   - dockerconfigjson
+
+  
+
