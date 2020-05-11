@@ -50,15 +50,15 @@ ingress:
     cert-manager.io/cluster-issuer: "letsencrypt"
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: DOMAIN.com
+    - host: DOMAIN
       paths: ["/"]
-    - host: www.DOMAIN.com
+    - host: www.DOMAIN
       paths: ["/"]
   tls: #[]
     - secretName: REPLACE-tls
       hosts:
-        - DOMAIN.com
-        - www.DOMAIN.com
+        - DOMAIN
+        - www.DOMAIN
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
