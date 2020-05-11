@@ -21,9 +21,9 @@ data:
   wp-config.php: |
     <?php 
     /* MySQL settings */
-    define( 'DB_NAME',     '{{ .Values.database.name }}' );
-    define( 'DB_USER',     '{{ .Values.database.user }}' );
-    define( 'DB_PASSWORD', '{{ .Values.database.pass }}' );
+    define( 'DB_NAME',     'DATABASE_NAME' );
+    define( 'DB_USER',     'DATABASE_USER' );
+    define( 'DB_PASSWORD', 'DATABASE_PASS' );
     define( 'DB_HOST',     '127.0.0.1' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
