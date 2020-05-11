@@ -55,7 +55,7 @@ ingress:
     - host: www.DOMAIN
       paths: ["/"]
   tls: #[]
-    - secretName: REPLACE-tls
+    - secretName: DOMAIN-tls
       hosts:
         - DOMAIN
         - www.DOMAIN
