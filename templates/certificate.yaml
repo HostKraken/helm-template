@@ -3,7 +3,7 @@ kind: Certificate
 metadata:
   name: DOMAIN-tls
 spec:
-  secretName: REPLACE-tls
+  secretName: DOMAIN-tls
   dnsNames:
   - DOMAIN
   - www.DOMAIN
