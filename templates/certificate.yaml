@@ -1,12 +1,12 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: REPLACE-tls
+  name: DOMAIN-tls
 spec:
   secretName: REPLACE-tls
   dnsNames:
-  - REPLACE
-  - www.REPLACE
+  - DOMAIN
+  - www.DOMAIN
   issuerRef:
     name: letsencrypt
     # We can reference ClusterIssuers by changing the kind here.
