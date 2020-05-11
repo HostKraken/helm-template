@@ -5,8 +5,8 @@ metadata:
 spec:
   secretName: REPLACE-tls
   dnsNames:
-  - REPLACE.com
-  - www.REPLACE.com
+  - REPLACE
+  - www.REPLACE
   issuerRef:
     name: letsencrypt
     # We can reference ClusterIssuers by changing the kind here.
