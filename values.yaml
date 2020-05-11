@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository:  registry.digitalocean.com/business-business/REPLACE
+  repository:  registry.digitalocean.com/business-business/DOMAIN
   pullPolicy: Always
   tag: latest
 dbimage:
