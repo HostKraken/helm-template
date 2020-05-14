@@ -60,5 +60,7 @@ data:
       define('ABSPATH', dirname(__FILE__) . '/');
 
     define( 'WP_DEFAULT_THEME', '{{- .Values.wp_theme |default "twentytwenty" -}}' );
+    require_once(ABSPATH . 'wp-includes/theme.php');
+    switch_theme('{{- .Values.wp_theme |default "twentytwenty" -}}');
     /* Sets up WordPress vars and included files. */
     require_once(ABSPATH . 'wp-settings.php');
