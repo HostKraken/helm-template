@@ -20,6 +20,7 @@ data:
       unset DATABASE_PASS
       unset DATABASE_NAME
     fi
+    mysql -h 127.0.0.1 -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME </configs/theme-fix.sql
 
   wp-config.php: |
     <?php 
