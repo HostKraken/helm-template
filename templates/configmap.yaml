@@ -5,6 +5,7 @@ metadata:
 data:
   theme-fix.sql: |
     UPDATE wp_options SET option_value = '{{ .Values.wp_theme | default "twentytwenty" }}' WHERE option_name = 'template';
+    UPDATE wp_options SET option_value = '{{ .Values.wp_theme | default "twentytwenty" }}' WHERE option_name = 'stylesheet';
 
   database-migration.sh: |
     set -x
