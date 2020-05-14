@@ -20,6 +20,7 @@ data:
 
   wp-config.php: |
     <?php 
+    define( 'WP_DEFAULT_THEME', '{{ .Values.wp-theme |default "twentytwenty" }}' );
     /* MySQL settings */
     define( 'DB_NAME',     'DATABASE_NAME' );
     define( 'DB_USER',     'DATABASE_USER' );
