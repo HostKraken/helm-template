@@ -3,6 +3,9 @@ kind: ConfigMap
 metadata:
   name: REPLACE-configmap
 data:
+  theme-fix.sql: |
+    UPDATE wp_options SET option_value = '{{ .Values.wp_theme | default "twentytwenty" }}' WHERE option_name = 'template';
+
   database-migration.sh: |
     set -x
     sleep 15
@@ -59,9 +62,5 @@ data:
     if ( !defined('ABSPATH') )
       define('ABSPATH', dirname(__FILE__) . '/');
 
-    define( 'WP_DEFAULT_THEME', '{{- .Values.wp_theme |default "twentytwenty" -}}' );
-    require_once(ABSPATH . 'wp-includes/theme.php');
-    require_once(ABSPATH . 'wp-includes/plugin.php');
-    switch_theme('{{- .Values.wp_theme |default "twentytwenty" -}}');
     /* Sets up WordPress vars and included files. */
     require_once(ABSPATH . 'wp-settings.php');
