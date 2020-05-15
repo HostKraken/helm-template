@@ -3,9 +3,6 @@ kind: ConfigMap
 metadata:
   name: REPLACE-configmap
 data:
-  theme-fix.sql: |
-    UPDATE wp_options SET option_value = '{{ .Values.wp_theme | default "twentytwenty" }}' WHERE option_name = 'template';
-    UPDATE wp_options SET option_value = '{{ .Values.wp_theme | default "twentytwenty" }}' WHERE option_name = 'stylesheet';
 
   database-migration.sh: |
     set -x
@@ -21,7 +18,7 @@ data:
       unset DATABASE_PASS
       unset DATABASE_NAME
     fi
-    mysql -h 127.0.0.1 -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME </configs/theme-fix.sql
+    wp theme activate {{- .Values.wp_theme|default "twentytwenty" -}} --path='/usr/html'
 
   wp-config.php: |
     <?php 
