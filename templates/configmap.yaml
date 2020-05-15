@@ -18,7 +18,7 @@ data:
       unset DATABASE_PASS
       unset DATABASE_NAME
     fi
-    wp-cli theme activate {{- .Values.wp_theme|default "twentytwenty" -}} --path='/usr/html'
+    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
 
   wp-config.php: |
     <?php 
