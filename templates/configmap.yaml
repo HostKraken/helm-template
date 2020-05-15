@@ -20,7 +20,7 @@ data:
     fi
     /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
     {{- range .Values.plugins }}
-    /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html
+    /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html || true
     {{- end }}
     /usr/bin/wp-cli plugin activate --all --path=/usr/html
 
