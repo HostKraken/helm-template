@@ -5,8 +5,8 @@ metadata:
   namespace: wordpress
 spec:
   accessModes:
-    - ReadWriteOnce
-  storageClassName: do-block-storage
+    - ReadWriteMany
+  storageClassName: nfs
   resources:
     requests:
       storage: 1Gi
@@ -20,8 +20,8 @@ metadata:
   namespace: wordpress
 spec:
   accessModes:
-    - ReadWriteOnce
-  storageClassName: do-block-storage
+    - ReadWriteMany
+  storageClassName: nfs
   resources:
     requests:
       storage: 1Gi
