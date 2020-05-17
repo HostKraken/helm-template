@@ -4,8 +4,6 @@ metadata:
   name: {{ include "REPLACE.fullname" . }}
   labels:
     {{- include "REPLACE.labels" . | nindent 4 }}
-  annotations:
-    rollme: {{ randAlphaNum 5 | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -14,6 +12,7 @@ spec:
   template:
     metadata:
       annotations: 
+        rollme: {{ randAlphaNum 5 | quote }}
         vault.banzaicloud.io/vault-addr: "https://vaultino.vault-infra.svc:8200"
         vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
       labels:
