@@ -18,7 +18,7 @@ data:
       unset DATABASE_PASS
       unset DATABASE_NAME
     fi
-    /usr/bin/wp-cli core install --path='/usr/html'
+    /usr/bin/wp-cli core install --path='/usr/html' --url '$DOMAIN' --title 'New Deployment' --admin_user 'admin' --admin_email 'roger@hostkraken.com'
     /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
     {{- range .Values.plugins }}
     /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html || true
