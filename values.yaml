@@ -11,7 +11,7 @@ image:
 dbimage:
   repository: registry.digitalocean.com/business-business/mariadb
   pullPolicy: Always
-  tag: latest
+  tag: 1.0.1
 
 imagePullSecrets: 
    - name: registry-business-business
