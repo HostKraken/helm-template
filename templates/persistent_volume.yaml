@@ -20,7 +20,7 @@ metadata:
   namespace: wordpress
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: do-block-storage
   resources:
     requests:
