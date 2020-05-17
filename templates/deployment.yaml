@@ -4,6 +4,8 @@ metadata:
   name: {{ include "REPLACE.fullname" . }}
   labels:
     {{- include "REPLACE.labels" . | nindent 4 }}
+  annotations:
+    rollme: {{ randAlphaNum 5 | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
