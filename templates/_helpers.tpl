@@ -58,7 +58,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "REPLACE.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
-{{- define "REPLACE.selectorlabels_mysql -}}
+{{- define "REPLACE.selectorlabels_mysql" -}}
 app.kubernetes.io/name: {{ include "REPLACE.name" . }}-mysql
 app.kubernetes.io/instance: {{ .Release.Name }}-mysql
 {{- end -}}
