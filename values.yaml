@@ -9,7 +9,7 @@ image:
   pullPolicy: Always
   tag: latest
 dbimage:
-  repository: registry.digitalocean.com/business-business/mariadb-aria
+  repository: registry.digitalocean.com/business-business/mariadb
   pullPolicy: Always
   tag: latest
 
