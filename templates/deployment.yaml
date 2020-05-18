@@ -29,9 +29,6 @@ spec:
         - name: config-volume
           configMap:
             name: REPLACE-configmap
-        - name: mysql-data-{{ .Chart.Name }}
-          persistentVolumeClaim:
-            claimName: mysql-data-{{ .Chart.Name }}
         - name: wp-uploads-{{ .Chart.Name }}
           persistentVolumeClaim:
             claimName: wp-uploads-{{ .Chart.Name }}
