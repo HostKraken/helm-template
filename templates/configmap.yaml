@@ -13,7 +13,7 @@ data:
     add_filter('pre_site_transient_update_plugins','remove_core_updates'); //hide updates for all plugins
     add_filter('pre_site_transient_update_themes','remove_core_updates'); //hide updates for all themes
     function remove_admin_menu_items() {
-    $remove_menu_items = array(__('Updates'));
+    $remove_menu_items = array(__('Dashboard'));
     global $menu;
     end ($menu);
     while (prev($menu)){
