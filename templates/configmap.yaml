@@ -34,7 +34,10 @@ data:
     {{- end }}
     /usr/bin/wp-cli plugin install disable-update-notifications --path=/usr/html
     /usr/bin/wp-cli plugin activate --all --path=/usr/html
-
+    disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php`
+    [[ if $disabledupdates -eq 0 ]]; then
+      cat /configs/disable-updates.php >>/usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php
+    fi
 
   wp-config.php: |
     <?php 
