@@ -60,7 +60,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 {{- define "REPLACE.selectorLabels_mysql" -}}
 app.kubernetes.io/name: {{ include "REPLACE.name" . }}-mysql
-app.kubernetes.io/instance: {{ .Release.Name }}-mysql
+app.kubernetes.io/instance: {{ include "REPLACE.name" . }}-mysql
 {{- end -}}
 
 
