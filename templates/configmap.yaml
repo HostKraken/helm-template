@@ -25,6 +25,7 @@ data:
     add_action('admin_menu', 'remove_admin_menu_items');
     function remove_plugin_install() {
     $page = remove_submenu_page( 'plugins.php', 'plugin-install.php' );
+    $page = remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
     // $page[0] is the menu title
     // $page[1] is the minimum level or capability required
     // $page[2] is the URL to the item's file
@@ -59,6 +60,8 @@ data:
     if [[ "$disabledupdates" -eq 0 ]]; then
       cat /configs/disable-updates.php >>/usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php
     fi
+    rm -f /usr/html/wp-content/wp-admin/plugin-editor.php
+    rm -f /usr/html/wp-content/wp-admin/plugin-install.php
 
   wp-config.php: |
     <?php 
