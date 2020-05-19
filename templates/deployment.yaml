@@ -215,7 +215,7 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 15
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}      
+            {{- toYaml .Values.mysqlresources | nindent 12 }}      
             
       {{- with .Values.nodeSelector }}
       nodeSelector:
