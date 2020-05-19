@@ -25,6 +25,7 @@ data:
     add_action('admin_menu', 'remove_admin_menu_items');
     function remove_plugin_install() {
     $page = remove_submenu_page( 'plugins.php', 'plugin-install.php' );
+    $page = remove_submenu_page( 'tools.php', 'site-health.php' );
     $page = remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
     // $page[0] is the menu title
     // $page[1] is the minimum level or capability required
@@ -62,6 +63,8 @@ data:
     fi
     rm -f /usr/html/wp-admin/plugin-editor.php
     rm -f /usr/html/wp-admin/plugin-install.php
+    rm -f /usr/html/wp-admin/site-health.php
+    rm -f /usr/html/wp-admin/site-health-info.php
 
   wp-config.php: |
     <?php 
