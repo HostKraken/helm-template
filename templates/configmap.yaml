@@ -93,14 +93,14 @@ data:
 
     /* Authentication Unique Keys and Salts. */
     /* https://api.wordpress.org/secret-key/1.1/salt/ */
-    define( 'AUTH_KEY',         'put your unique phrase here' );
-    define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
-    define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
-    define( 'NONCE_KEY',        'put your unique phrase here' );
-    define( 'AUTH_SALT',        'put your unique phrase here' );
-    define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
-    define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
-    define( 'NONCE_SALT',       'put your unique phrase here' );
+    define( 'AUTH_KEY',         '{{ randAlphaNum 16 }}' );
+    define( 'SECURE_AUTH_KEY',  '{{ randAlphaNum 16 }}' );
+    define( 'LOGGED_IN_KEY',    '{{ randAlphaNum 16 }}' );
+    define( 'NONCE_KEY',        '{{ randAlphaNum 16 }}' );
+    define( 'AUTH_SALT',        '{{ randAlphaNum 16 }}' );
+    define( 'SECURE_AUTH_SALT', '{{ randAlphaNum 16 }}' );
+    define( 'LOGGED_IN_SALT',   '{{ randAlphaNum 16 }}' );
+    define( 'NONCE_SALT',       '{{ randAlphaNum 16 }}' );
 
 
     /* Absolute path to the WordPress directory. */
