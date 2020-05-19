@@ -23,7 +23,15 @@ data:
     }
     } 
     add_action('admin_menu', 'remove_admin_menu_items');
-    remove_submenu_page( "Plugins", "Add New" );
+    function remove_plugin_install() {
+    $page = remove_submenu_page( 'plugins.php', 'plugin-install.php' );
+    // $page[0] is the menu title
+    // $page[1] is the minimum level or capability required
+    // $page[2] is the URL to the item's file
+    }
+    add_action( 'admin_menu', 'remove_plugin_install', 999 );
+
+
 
   database-migration.sh: |
     set -x
