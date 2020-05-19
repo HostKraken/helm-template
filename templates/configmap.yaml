@@ -23,6 +23,7 @@ data:
     }
     } 
     add_action('admin_menu', 'remove_admin_menu_items');
+    remove_submenu_page( "Plugins", "Add New" );
 
   database-migration.sh: |
     set -x
