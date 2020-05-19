@@ -65,14 +65,14 @@ resources:
     cpu: 128m
     memory: 128Mi
   requests:
-    cpu: 256m
+    cpu: 128m
     memory: 128Mi
 mysqlresources: 
   limits:
-    cpu: 256m
+    cpu: 128m
     memory: 256Mi
   requests:
-    cpu: 256m
+    cpu: 128m
     memory: 256Mi
 
 nodeSelector: {}
