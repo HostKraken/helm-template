@@ -92,13 +92,13 @@ spec:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 5 ) 60 }}
+            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 5 ) 50 }}
             periodSeconds: 5
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 5 ) 60 }}
+            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 5 ) 50 }}
             periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
