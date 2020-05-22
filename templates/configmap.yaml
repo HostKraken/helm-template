@@ -26,6 +26,8 @@ data:
     function remove_plugin_install() {
     $page = remove_submenu_page( 'plugins.php', 'plugin-install.php' );
     $page = remove_submenu_page( 'tools.php', 'site-health.php' );
+    $page = remove_submenu_page( 'tools.php', 'import.php' );
+    $page = remove_submenu_page( 'tools.php', 'export.php' );
     $page = remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
     // $page[0] is the menu title
     // $page[1] is the minimum level or capability required
