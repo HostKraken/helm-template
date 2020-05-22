@@ -26,6 +26,7 @@ data:
     function remove_plugin_install() {
     $page = remove_submenu_page( 'plugins.php', 'plugin-install.php' );
     $page = remove_submenu_page( 'themes.php', 'theme-editor.php' );
+    $page = remove_submenu_page( 'themes.php', 'themes.php' );
     $page = remove_submenu_page( 'tools.php', 'site-health.php' );
     $page = remove_submenu_page( 'tools.php', 'import.php' );
     $page = remove_submenu_page( 'tools.php', 'export.php' );
