@@ -60,13 +60,7 @@ ingress:
         - DOMAIN
         - www.DOMAIN
 
-resources: 
-  limits:
-    cpu: 256m
-    memory: 128Mi
-  requests:
-    cpu: 256m
-    memory: 128Mi
+resources: {}
 mysqlresources: 
   limits:
     cpu: 128m
