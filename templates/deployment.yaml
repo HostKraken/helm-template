@@ -94,12 +94,14 @@ spec:
               port: http
             initialDelaySeconds: {{ add ( mul (len .Values.plugins) 5 ) 60 }}
             periodSeconds: 5
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /
               port: http
             initialDelaySeconds: {{ add ( mul (len .Values.plugins) 5 ) 60 }}
             periodSeconds: 5
+            failureThreshold: 30
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
