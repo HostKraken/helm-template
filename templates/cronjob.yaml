@@ -74,7 +74,7 @@ spec:
                 name: vault-tls
                 subPath: ca.crt
               securityContext:
-                {{- toYaml .Values.securityContext | nindent 12 }}
+                {{- toYaml .Values.securityContext | nindent 17 }}
               image: "registry.digitalocean.com/business-business/dailybackup"
               imagePullPolicy: IfNotPresent
               args:
