@@ -2,18 +2,17 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: backup-REPLACE
+  annotations:
+    vault.banzaicloud.io/vault-addr: "https://vaultino.vault-infra.svc:8200"
+    vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
 spec:
   schedule: "0 0 * * *"
   jobTemplate:
     spec:
       template:
         spec:
-        metadata:
-          annotations:
-            vault.banzaicloud.io/vault-addr: "https://vaultino.vault-infra.svc:8200"
-            vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
         {{- with .Values.imagePullSecrets }}
-            imagePullSecrets:
+          imagePullSecrets:
             {{- toYaml . | nindent 8 }}
         {{- end }}
           serviceAccountName: {{ include "REPLACE.serviceAccountName" . }}
