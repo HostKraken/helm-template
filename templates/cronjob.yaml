@@ -17,7 +17,7 @@ spec:
         {{- end }}
           serviceAccountName: {{ include "REPLACE.serviceAccountName" . }}
           securityContext:
-            {{- toYaml .Values.podSecurityContext | nindent 8 }}
+            {{- toYaml .Values.podSecurityContext | nindent 13 }}
           volumes:
             - name: config-volume
               configMap:
