@@ -58,6 +58,8 @@ spec:
                   value: "false"
                 - name: VAULT_CACERT
                   value: /vault/tls/ca.crt
+                - name: DATABASE_HOST
+                  value: REPLACE-mysql.wordpress.svc
                 - name: DATABASE_USER
                   value: "vault:secret/data/mysql/{{ .Chart.Name }}#user"
                 - name: DATABASE_NAME
