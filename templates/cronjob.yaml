@@ -15,12 +15,67 @@ spec:
           imagePullSecrets:
             {{- toYaml . | nindent 12 }}
         {{- end }}
-          containers:
-          - name: hello
-            image: busybox
-            imagePullPolicy: IfNotPresent
-            args:
-            - /bin/sh
+          serviceAccountName: {{ include "REPLACE.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 8 }}
+          volumes:
+            - name: config-volume
+              configMap:
+                name: REPLACE-configmap
+            - name: wp-uploads-{{ .Chart.Name }}
+              persistentVolumeClaim:
+                claimName: wp-uploads-{{ .Chart.Name }}
+            - emptyDir:
+                medium: Memory
+              name: vault-env
+            - name: vault-tls
+              secret:
+                secretName: vault-tls
+          initContainers:
+          - name: copy-vault-env
+            command:
+            - sh
             - -c
-            - date; echo Hello from the Kubernetes cluster
-          restartPolicy: OnFailure
+            - cp /usr/local/bin/vault-env /vault/
+            image: banzaicloud/vault-env:latest
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+            - mountPath: /vault/
+              name: vault-env
+          containers:
+            - name: {{ .Chart.Name }}-dailybackup
+              env:
+                - name: VAULT_ADDR
+                  value: https://vaultino.vault-infra.svc.cluster.local:8200
+                - name: VAULT_SKIP_VERIFY
+                  value: "false"
+                - name: VAULT_PATH
+                  value: kubernetes
+                - name: VAULT_ROLE
+                  value: default
+                - name: VAULT_IGNORE_MISSING_SECRETS
+                  value: "false"
+                - name: VAULT_CACERT
+                  value: /vault/tls/ca.crt
+                - name: DATABASE_USER
+                  value: "vault:secret/data/mysql/{{ .Chart.Name }}#user"
+                - name: DATABASE_NAME
+                  value: "vault:secret/data/mysql/{{ .Chart.Name }}#name"
+                - name: DATABASE_PASS
+                  value: "vault:secret/data/mysql/{{ .Chart.Name }}#pass"
+              volumeMounts:
+              - name: config-volume
+                mountPath: /configs
+              - name: wp-uploads-{{ .Chart.Name }}
+                mountPath: /usr/html/wp-content/uploads
+              - mountPath: /vault/
+                name: vault-env
+              - mountPath: /vault/tls/ca.crt
+                name: vault-tls
+                subPath: ca.crt
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 12 }}
+              image: "registry.digitalocean.com/business-business/dailybackup"
+              imagePullPolicy: IfNotPresent
+              args:
+              - /bin/backup-site DOMAIN
