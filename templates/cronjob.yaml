@@ -7,11 +7,11 @@ spec:
   jobTemplate:
     spec:
       template:
+        spec:
         metadata:
           annotations:
             vault.banzaicloud.io/vault-addr: "https://vaultino.vault-infra.svc:8200"
             vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
-        spec:
         {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
             {{- toYaml . | nindent 8 }}
