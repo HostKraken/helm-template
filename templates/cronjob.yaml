@@ -13,7 +13,7 @@ spec:
             vault.banzaicloud.io/vault-addr: "https://vaultino.vault-infra.svc:8200"
             vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
         {{- with .Values.imagePullSecrets }}
-          imagePullSecrets:
+            imagePullSecrets:
             {{- toYaml . | nindent 8 }}
         {{- end }}
           serviceAccountName: {{ include "REPLACE.serviceAccountName" . }}
