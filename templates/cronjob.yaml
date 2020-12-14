@@ -68,9 +68,9 @@ spec:
                   value: "vault:secret/data/mysql/{{ .Chart.Name }}#pass"
                 - name: BUCKET
                   value: "hostkraken-backup"
-                - name: BACKUP_ACCESS_KEY
+                - name: AWS_ACCESS_KEY_ID
                   value: "vault:secret/data/backup-secret#access_key"
-                - name: BACKUP_SECRET_KEY
+                - name: AWS_SECRET_KEY
                   value: "vault:secret/data/backup-secret#secret_key"
                 - name: SITE_NAME
                   value: DOMAIN
