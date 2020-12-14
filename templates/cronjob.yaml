@@ -66,6 +66,12 @@ spec:
                   value: "vault:secret/data/mysql/{{ .Chart.Name }}#name"
                 - name: DATABASE_PASS
                   value: "vault:secret/data/mysql/{{ .Chart.Name }}#pass"
+                - name: BUCKET
+                  value: "hostkraken-backup"
+                - name: BACKUP_ACCESS_KEY
+                  value: "vault:secret/data/backup-secret#access_key"
+                - name: BACKUP_SECRET_KEY
+                  value: "vault:secret/data/backup-secret#secret_key"
               volumeMounts:
               - name: config-volume
                 mountPath: /configs
@@ -81,4 +87,4 @@ spec:
               image: "registry.digitalocean.com/business-business/dailybackup"
               imagePullPolicy: IfNotPresent
               args:
-              - /bin/backup-site DOMAIN
+              - /bin/backup-site REPLACE
