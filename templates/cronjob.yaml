@@ -86,7 +86,7 @@ spec:
                 subPath: ca.crt
               securityContext:
                 {{- toYaml .Values.securityContext | nindent 17 }}
-              image: "registry.digitalocean.com/business-business/dailybackup"
+              image: "registry.digitalocean.com/business-business/dailybackup:latest"
               imagePullPolicy: Always
               args:
               - /bin/backup-site REPLACE
