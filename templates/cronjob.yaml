@@ -70,7 +70,7 @@ spec:
                   value: "hostkraken-backup"
                 - name: AWS_ACCESS_KEY_ID
                   value: "vault:secret/data/backup-secret#access_key"
-                - name: AWS_SECRET_KEY
+                - name: AWS_SECRET_ACCESS_KEY
                   value: "vault:secret/data/backup-secret#secret_key"
                 - name: SITE_NAME
                   value: DOMAIN
