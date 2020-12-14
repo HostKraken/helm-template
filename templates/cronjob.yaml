@@ -39,7 +39,7 @@ spec:
             - -c
             - cp /usr/local/bin/vault-env /vault/
             image: banzaicloud/vault-env:latest
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             volumeMounts:
             - mountPath: /vault/
               name: vault-env
@@ -87,6 +87,6 @@ spec:
               securityContext:
                 {{- toYaml .Values.securityContext | nindent 17 }}
               image: "registry.digitalocean.com/business-business/dailybackup"
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               args:
               - /bin/backup-site REPLACE
