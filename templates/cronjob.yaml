@@ -39,7 +39,7 @@ spec:
             - -c
             - cp /usr/local/bin/vault-env /vault/
             image: banzaicloud/vault-env:latest
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             volumeMounts:
             - mountPath: /vault/
               name: vault-env
