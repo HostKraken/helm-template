@@ -72,7 +72,7 @@ spec:
                   value: "vault:secret/data/backup-secret#access_key"
                 - name: BACKUP_SECRET_KEY
                   value: "vault:secret/data/backup-secret#secret_key"
-                - name: DOMAIN_NAME
+                - name: SITE_NAME
                   value: DOMAIN
               volumeMounts:
               - name: config-volume
