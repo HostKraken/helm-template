@@ -34,7 +34,7 @@ data:
     define( 'DB_HOST',     '127.0.0.1' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
-    #define('SITE_URL', "https://{{ .Values.site_url }}");
+    define('SITE_URL', "https://{{ .Values.site_url }}");
     /* MySQL database table prefix. */
     $table_prefix = '{{- .Values.table_prefix | default "wp_" -}}';
     //Begin Really Simple SSL Load balancing fix
