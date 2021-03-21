@@ -13,7 +13,7 @@ dbimage:
   pullPolicy: Always
   tag: 1.0.1
 
-imagePullSecrets: 
+imagePullSecrets:
    - name: registry-business-business
 nameOverride: ""
 fullnameOverride: ""
@@ -60,12 +60,14 @@ ingress:
         - DOMAIN
         - www.DOMAIN
 
-resources: 
+resources:
   limits:
     memory: 256Mi
+    cpu: 128m
   requests:
+    cpu: 128m
     memory: 128Mi
-mysqlresources: 
+mysqlresources:
   limits:
     cpu: 128m
     memory: 256Mi
