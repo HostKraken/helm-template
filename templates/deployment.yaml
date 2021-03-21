@@ -89,16 +89,18 @@ spec:
               containerPort: 80
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command: 
+              - pgrep
+              - nginx
             initialDelaySeconds: {{ add ( mul (len .Values.plugins) 10 ) 90 }}
             periodSeconds: 5
             failureThreshold: 30
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command: 
+              - pgrep
+              - nginx
             initialDelaySeconds: {{ add ( mul (len .Values.plugins) 10 ) 90 }}
             periodSeconds: 5
             failureThreshold: 30
