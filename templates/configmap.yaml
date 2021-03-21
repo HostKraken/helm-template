@@ -54,6 +54,7 @@ data:
       unset DATABASE_NAME
     fi
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
+    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
     /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
     {{- range .Values.plugins }}
     /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html || true
@@ -83,7 +84,7 @@ data:
     define( 'DB_HOST',     'REPLACE-mysql.wordpress.svc' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
-    #define('SITE_URL', "https://{{ .Values.site_url }}");
+    define('SITE_URL', "https://{{ .Values.site_url }}");
     /* MySQL database table prefix. */
     $table_prefix = '{{- .Values.table_prefix | default "wp_" -}}';
     //Begin Really Simple SSL Load balancing fix
