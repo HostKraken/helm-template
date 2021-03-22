@@ -42,6 +42,14 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+{{- define "REPLACE.labels_mysql" -}}
+helm.sh/chart: {{ include "REPLACE.chart" . }}
+{{ include "REPLACE.selectorLabels_mysql" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
 
 {{/*
 Selector labels
@@ -50,6 +58,11 @@ Selector labels
 app.kubernetes.io/name: {{ include "REPLACE.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
+{{- define "REPLACE.selectorLabels_mysql" -}}
+app.kubernetes.io/name: {{ include "REPLACE.name" . }}-mysql
+app.kubernetes.io/instance: {{ include "REPLACE.name" . }}-mysql
+{{- end -}}
+
 
 {{/*
 Create the name of the service account to use

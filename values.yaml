@@ -11,9 +11,9 @@ image:
 dbimage:
   repository: registry.digitalocean.com/business-business/mariadb
   pullPolicy: Always
-  tag: latest
+  tag: 1.0.1
 
-imagePullSecrets: 
+imagePullSecrets:
    - name: registry-business-business
 nameOverride: ""
 fullnameOverride: ""
@@ -60,17 +60,20 @@ ingress:
         - DOMAIN
         - www.DOMAIN
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources:
+  limits:
+    memory: 256Mi
+    cpu: 128m
+  requests:
+    cpu: 128m
+    memory: 128Mi
+mysqlresources:
+  limits:
+    cpu: 128m
+    memory: 256Mi
+  requests:
+    cpu: 128m
+    memory: 256Mi
 
 nodeSelector: {}
 #node-role.kubernetes.io/worker: "true"

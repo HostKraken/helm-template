@@ -29,9 +29,6 @@ spec:
         - name: config-volume
           configMap:
             name: REPLACE-configmap
-        - name: mysql-data-{{ .Chart.Name }}
-          persistentVolumeClaim:
-            claimName: mysql-data-{{ .Chart.Name }}
         - name: wp-uploads-{{ .Chart.Name }}
           persistentVolumeClaim:
             claimName: wp-uploads-{{ .Chart.Name }}
@@ -92,18 +89,87 @@ spec:
               containerPort: 80
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 60
+            exec:
+              command: 
+              - pgrep
+              - nginx
+            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 10 ) 90 }}
+            periodSeconds: 5
+            failureThreshold: 30
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 60
+            exec:
+              command: 
+              - pgrep
+              - nginx
+            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 10 ) 90 }}
+            periodSeconds: 5
+            failureThreshold: 30
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "REPLACE.fullname" . }}-mysql
+  labels:
+    {{- include "REPLACE.labels_mysql" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "REPLACE.selectorLabels_mysql" . | nindent 6 }}
+  template:
+    metadata:
+      annotations: 
+        vault.banzaicloud.io/vault-addr: "https://vaultino.vault-infra.svc:8200"
+        vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
+      labels:
+        {{- include "REPLACE.selectorLabels_mysql" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "REPLACE.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: REPLACE-configmap
+        - name: mysql-data-{{ .Chart.Name }}
+          persistentVolumeClaim:
+            claimName: mysql-data-{{ .Chart.Name }}
+        - emptyDir:
+            medium: Memory
+          name: vault-env
+        - name: vault-tls
+          secret:
+            secretName: vault-tls    
+      initContainers:
+      - name: copy-vault-env
+        command:
+        - sh
+        - -c
+        - cp /usr/local/bin/vault-env /vault/
+        image: banzaicloud/vault-env:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /vault/
+          name: vault-env                    
+      containers:
         - name: {{ .Chart.Name }}-mysql
           volumeMounts:
           - name: mysql-data-{{ .Chart.Name }}
@@ -147,15 +213,15 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 3306
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 30
+            periodSeconds: 15
           livenessProbe:
             tcpSocket:
               port: 3306
-            initialDelaySeconds: 15
-            periodSeconds: 20
+            initialDelaySeconds: 30
+            periodSeconds: 15
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}      
+            {{- toYaml .Values.mysqlresources | nindent 12 }}      
             
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -169,3 +235,5 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+
+
