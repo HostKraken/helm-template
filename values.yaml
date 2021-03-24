@@ -62,7 +62,7 @@ ingress:
 
 resources:
   limits:
-    memory: 256Mi
+    memory: 128Mi
     cpu: 128m
   requests:
     cpu: 128m
@@ -70,10 +70,10 @@ resources:
 mysqlresources:
   limits:
     cpu: 128m
-    memory: 256Mi
+    memory: 128Mi
   requests:
     cpu: 128m
-    memory: 256Mi
+    memory: 128Mi
 
 nodeSelector: {}
 #node-role.kubernetes.io/worker: "true"
