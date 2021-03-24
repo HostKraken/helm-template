@@ -173,6 +173,13 @@ spec:
         - cp /usr/local/bin/vault-env /vault/
         image: banzaicloud/vault-env:latest
         imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 64Mi
         volumeMounts:
         - mountPath: /vault/
           name: vault-env                    
