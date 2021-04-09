@@ -63,16 +63,16 @@ ingress:
 resources:
   limits:
     memory: 256Mi
-    cpu: 256m
+    cpu: 128m
   requests:
-    cpu: 256m
+    cpu: 128m
     memory: 256Mi
 mysqlresources:
   limits:
-    cpu: 256m
+    cpu: 128m
     memory: 256Mi
   requests:
-    cpu: 256m
+    cpu: 128m
     memory: 256Mi
 
 nodeSelector: {}
