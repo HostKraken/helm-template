@@ -5,11 +5,11 @@
 replicaCount: 1
 
 image:
-  repository:  registry.digitalocean.com/business-business/DOMAIN
+  repository:  registry.hostkraken.com/DOMAIN
   pullPolicy: Always
   tag: latest
 dbimage:
-  repository: registry.digitalocean.com/business-business/mariadb
+  repository: registry.hostkraken.com/mariadb
   pullPolicy: Always
   tag: 1.0.1
 
