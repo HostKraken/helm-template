@@ -20,7 +20,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "REPLACE.serviceAccountName" . }}
+      serviceAccountName: webapp-sa
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
@@ -106,7 +106,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "REPLACE.serviceAccountName" . }}
+      serviceAccountName: webapp-sa
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
