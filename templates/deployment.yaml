@@ -13,7 +13,7 @@ spec:
     metadata:
       annotations: 
         rollme: {{ randAlphaNum 5 | quote }}
-        vault.banzaicloud.io/vault-addr: "https://vaultino.vault-infra.svc:8200"
+        vault.banzaicloud.io/vault-addr: "https://vault.default.svc:8200"
         vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
       labels:
         {{- include "REPLACE.selectorLabels" . | nindent 8 }}
@@ -60,7 +60,7 @@ spec:
         - name: {{ .Chart.Name }}
           env:
             - name: VAULT_ADDR
-              value: https://vaultino.vault-infra.svc.cluster.local:8200
+              value: https://vault.default.svc.cluster.local:8200
             - name: VAULT_SKIP_VERIFY
               value: "false"
             - name: VAULT_PATH
@@ -140,7 +140,7 @@ spec:
   template:
     metadata:
       annotations: 
-        vault.banzaicloud.io/vault-addr: "https://vaultino.vault-infra.svc:8200"
+        vault.banzaicloud.io/vault-addr: "https://vault.default.svc:8200"
         vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
       labels:
         {{- include "REPLACE.selectorLabels_mysql" . | nindent 8 }}
@@ -201,7 +201,7 @@ spec:
           imagePullPolicy: {{ .Values.dbimage.pullPolicy }}
           env:
             - name: VAULT_ADDR
-              value: https://vaultino.vault-infra.svc.cluster.local:8200
+              value: https://vault.default.svc.cluster.local:8200
             - name: VAULT_SKIP_VERIFY
               value: "false"
             - name: VAULT_PATH
