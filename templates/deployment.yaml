@@ -62,7 +62,7 @@ spec:
             - name: VAULT_ADDR
               value: https://vault.default.svc.cluster.local:8200
             - name: VAULT_SKIP_VERIFY
-              value: "false"
+              value: "true"
             - name: VAULT_PATH
               value: kubernetes
             - name: VAULT_ROLE
@@ -203,7 +203,7 @@ spec:
             - name: VAULT_ADDR
               value: https://vault.default.svc.cluster.local:8200
             - name: VAULT_SKIP_VERIFY
-              value: "false"
+              value: "true"
             - name: VAULT_PATH
               value: kubernetes
             - name: VAULT_ROLE
