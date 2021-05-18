@@ -136,7 +136,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.dbimage.repository }}:{{ .Values.dbimage.tag }}"
           imagePullPolicy: {{ .Values.dbimage.pullPolicy }}
-          env: {}
+          env: []
           ports:
             - name: mysql
               containerPort: 3306
