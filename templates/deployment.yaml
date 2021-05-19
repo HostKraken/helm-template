@@ -51,26 +51,21 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: MYSQL_USER
+          - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
                 name: REPLACE-db-creds-secret
                 key: user
-          - name: MYSQL_PASSWORD
+          - name: DATABASE_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: REPLACE-db-creds-secret
                 key: pass
-          - name: MYSQL_DATABASE
+          - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
                 name: REPLACE-db-creds-secret
                 key: name
-          - name: MYSQL_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: REPLACE-db-creds-secret
-                key: rootpw
           ports:
             - name: http
               containerPort: 80
