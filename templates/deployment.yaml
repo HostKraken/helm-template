@@ -110,7 +110,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
-        - name: db-creds
+        - name: REPLACE-db-creds
           csi:
             driver: "secrets-store.csi.k8s.io"
             readOnly: true
