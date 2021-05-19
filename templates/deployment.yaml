@@ -125,7 +125,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-mysql
           volumeMounts:
-          - name: "db-creds"
+          - name: "REPLACE-db-creds"
             mountPath: "/mnt/secrets-store"
             readOnly: true
           - name: mysql-data-{{ .Chart.Name }}
