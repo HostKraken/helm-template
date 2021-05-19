@@ -136,7 +136,27 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.dbimage.repository }}:{{ .Values.dbimage.tag }}"
           imagePullPolicy: {{ .Values.dbimage.pullPolicy }}
-          env: []
+          env: 
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: REPLACE-db-creds-secret
+                key: user
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: REPLACE-db-creds-secret
+                key: pass
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: REPLACE-db-creds-secret
+                key: name
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: REPLACE-db-creds-secret
+                key: rootpw
           ports:
             - name: mysql
               containerPort: 3306
