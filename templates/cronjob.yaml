@@ -65,7 +65,7 @@ spec:
                 mountPath: /usr/html/wp-content/uploads
               securityContext:
                 {{- toYaml .Values.securityContext | nindent 17 }}
-              image: "registry.digitalocean.com/business-business/dailybackup:latest"
+              image: "registry.hostkraken.com/dailybackup:latest"
               imagePullPolicy: Always
               args:
               - /bin/backup-site REPLACE
