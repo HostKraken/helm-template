@@ -41,7 +41,14 @@ data:
 
   database-migration.sh: |
     set -x
-    sleep 15
+    while true; do
+    mysql -h REPLACE-mysql.wordpress.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME -e "select now();"
+    EC=$?
+    if [ $EC -eq 0 ]; then
+        break
+    fi
+    sleep
+    done
     if [[ -f /usr/html/database_migration ]]; then
       if [ "`echo /database/*.sql`" != "/database/*.sql" ]; then
           for sqlscript in $(ls /database/*.sql); do
