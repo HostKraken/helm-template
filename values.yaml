@@ -69,11 +69,11 @@ resources:
     memory: 256Mi
 mysqlresources:
   limits:
-    cpu: 256m
-    memory: 256Mi
+    cpu: 512m
+    memory: 512Mi
   requests:
-    cpu: 128m
-    memory: 256Mi
+    cpu: 512m
+    memory: 512Mi
 
 nodeSelector: {}
 #node-role.kubernetes.io/worker: "true"
