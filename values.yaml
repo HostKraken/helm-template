@@ -62,11 +62,11 @@ ingress:
 
 resources:
   limits:
-    memory: 192Mi
+    memory: 256Mi
     cpu: 1024m
   requests:
-    cpu: 128m
-    memory: 192Mi
+    cpu: 1024m
+    memory: 256Mi
 mysqlresources:
   limits:
     cpu: 256m
