@@ -41,6 +41,7 @@ data:
 
   database-migration.sh: |
     set -x
+    sleep 20
     while true; do
     mysql -h REPLACE-mysql.wordpress.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME -e "select now();"
     EC=$?
