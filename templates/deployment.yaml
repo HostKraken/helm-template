@@ -185,12 +185,12 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 3306
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             periodSeconds: 15
           livenessProbe:
             tcpSocket:
               port: 3306
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             periodSeconds: 15
           resources:
             {{- toYaml .Values.mysqlresources | nindent 12 }}      
