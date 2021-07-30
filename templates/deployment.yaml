@@ -36,6 +36,9 @@ spec:
         - name: wp-uploads-{{ .Chart.Name }}
           persistentVolumeClaim:
             claimName: wp-uploads-{{ .Chart.Name }}
+        - name: wp-root-{{ .Chart.Name }}
+          persistentVolumeClaim:
+            claimName: wp-root-{{ .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}
           volumeMounts:
@@ -44,6 +47,8 @@ spec:
             readOnly: true
           - name: config-volume
             mountPath: /configs
+          - name: wp-root-{{ .Chart.Name }}
+            mountPath: /usr/html
           - name: wp-uploads-{{ .Chart.Name }}
             mountPath: /usr/html/wp-content/uploads
           securityContext:
