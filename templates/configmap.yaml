@@ -47,7 +47,7 @@ data:
     if [ $EC -eq 0 ]; then
         break
     fi
-    sleep
+    sleep 1
     done
     if [[ -f /usr/html/database_migration ]]; then
       if [ "`echo /database/*.sql`" != "/database/*.sql" ]; then
