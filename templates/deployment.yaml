@@ -162,22 +162,22 @@ spec:
           image: "{{ .Values.dbimage.repository }}:{{ .Values.dbimage.tag }}"
           imagePullPolicy: {{ .Values.dbimage.pullPolicy }}
           env: 
-          - name: MYSQL_USER
+          - name: MARIADB_USER
             valueFrom:
               secretKeyRef:
                 name: REPLACE-db-creds-secret
                 key: user
-          - name: MYSQL_PASSWORD
+          - name: MARIADB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: REPLACE-db-creds-secret
                 key: pass
-          - name: MYSQL_DATABASE
+          - name: MARIADB_DATABASE
             valueFrom:
               secretKeyRef:
                 name: REPLACE-db-creds-secret
                 key: name
-          - name: MYSQL_ROOT_PASSWORD
+          - name: MARIADB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: REPLACE-db-creds-secret
