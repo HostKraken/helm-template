@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "REPLACE.labels" . | nindent 4 }}
 spec:
+  strategy:
+    type: Recreate
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -113,6 +115,8 @@ metadata:
   labels:
     {{- include "REPLACE.labels_mysql" . | nindent 4 }}
 spec:
+  strategy:
+    type: Recreate
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
