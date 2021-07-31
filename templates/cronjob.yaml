@@ -45,17 +45,17 @@ spec:
                       name: REPLACE-db-creds-secret
                       key: pass
                 - name: BUCKET
-                  value: "hostkraken-backup"
+                  value: "do-backup-secret"
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom: 
                     secretKeyRef:
-                      name: hostkraken-backup
-                      key: AWS_ACCESS_KEY_ID
+                      name: do-backup-secret
+                      key: access_key
                 - name: AWS_SECRET_ACCESS_KEY
                   valueFrom:
                     secretKeyRef:
-                      name: hostkraken-backup
-                      key: AWS_SECRET_ACCESS_KEY
+                      name: do-backup-secret
+                      key: secret_key
                 - name: SITE_NAME
                   value: DOMAIN
               volumeMounts:
