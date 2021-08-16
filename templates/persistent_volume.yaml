@@ -35,8 +35,8 @@ metadata:
   namespace: wordpress
 spec:
   accessModes:
-    - ReadWriteMany
-  storageClassName: nfs
+    - ReadWriteOnce
+  storageClassName: rook-ceph-block
   resources:
     requests:
       storage: 1Gi
