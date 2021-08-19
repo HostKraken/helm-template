@@ -64,8 +64,6 @@ data:
     fi
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
-    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
-    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
     /usr/bin/wp-cli plugin deactivate hello --path=/usr/html
     /usr/bin/wp-cli plugin uninstall hello --path=/usr/html
     fi
@@ -76,6 +74,8 @@ data:
     if ! /usr/bin/wp-cli plugin is-active {{ . }} --path='/usr/html' ; then
     /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html || true
     fi
+    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
+    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
     {{- end }}    
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
