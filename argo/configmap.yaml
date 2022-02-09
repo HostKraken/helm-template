@@ -1,0 +1,135 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: site-configmap
+data:
+  disable-updates.php: |
+    // hide update notifications
+    function remove_core_updates(){
+
+    global $wp_version;return(object) array('last_checked'=> time(),'version_checked'=> $wp_version,);
+     }
+    add_filter('pre_site_transient_update_core','remove_core_updates'); //hide updates for WordPress itself
+    add_filter('pre_site_transient_update_plugins','remove_core_updates'); //hide updates for all plugins
+    add_filter('pre_site_transient_update_themes','remove_core_updates'); //hide updates for all themes
+    function remove_admin_menu_items() {
+    $remove_menu_items = array(__('Dashboard'));
+    global $menu;
+    end ($menu);
+    while (prev($menu)){
+        $item = explode(' ',$menu[key($menu)][0]);
+    if(in_array($item[0] != NULL?$item[0]:"" , $remove_menu_items)){
+    unset($menu[key($menu)]);}
+    }
+    } 
+    add_action('admin_menu', 'remove_admin_menu_items');
+    function remove_plugin_install() {
+    $page = remove_submenu_page( 'plugins.php', 'plugin-install.php' );
+    $page = remove_submenu_page( 'themes.php', 'theme-editor.php' );
+    $page = remove_submenu_page( 'themes.php', 'themes.php' );
+    $page = remove_submenu_page( 'tools.php', 'site-health.php' );
+    $page = remove_submenu_page( 'tools.php', 'import.php' );
+    $page = remove_submenu_page( 'tools.php', 'export.php' );
+    $page = remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
+    // $page[0] is the menu title
+    // $page[1] is the minimum level or capability required
+    // $page[2] is the URL to the item's file
+    }
+    add_action( 'admin_menu', 'remove_plugin_install', 999 );
+
+
+
+  database-migration.sh: |
+    set -x
+    rm -f /usr/html/wp-admin/install.php; 
+    sleep 1;
+    while true; do
+    mysql -h mysql.$(NAMESPACE).svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME -e "select now();"
+    EC=$?
+    if [ $EC -eq 0 ]; then
+        break
+    fi
+    sleep 1
+    done
+    if [[ -f /usr/html/database_migration ]]; then
+      if [ "`echo /database/*.sql`" != "/database/*.sql" ]; then
+          for sqlscript in $(ls /database/*.sql); do
+              mysql -h mysql.$(NAMESPACE).svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME <$sqlscript
+          done
+          rm /usr/html/database_migration
+      fi
+      unset DATABASE_USER
+      unset DATABASE_PASS
+      unset DATABASE_NAME
+    fi
+    if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
+    /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
+    /usr/bin/wp-cli plugin deactivate hello --path=/usr/html
+    /usr/bin/wp-cli plugin uninstall hello --path=/usr/html
+    fi
+    {{- range .Values.plugins }}
+    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' ; then
+    /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html || true    
+    fi
+    if ! /usr/bin/wp-cli plugin is-active {{ . }} --path='/usr/html' ; then
+    /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html || true
+    fi
+    {{- end }}
+    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
+    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
+    export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php`
+    if [[ "$disabledupdates" -eq 0 ]]; then
+      cat /configs/disable-updates.php >>/usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php
+    fi
+    rm -f /usr/html/wp-admin/plugin-editor.php
+    rm -f /usr/html/wp-admin/plugin-install.php
+    rm -f /usr/html/wp-admin/site-health.php
+    rm -f /usr/html/wp-admin/site-health-info.php
+    rm -f /usr/html/wp-admin/import.php
+    rm -f /usr/html/wp-admin/theme-editor.php
+    rm -f /usr/html/wp-admin/export.php
+    sed -i 's/<a.*plugin-install.php.*\/a>//g' /usr/html/wp-admin/plugins.php
+
+  wp-config.php: |
+    <?php 
+    /* MySQL settings */
+    define( 'DB_NAME',     'DATABASE_NAME' );
+    define( 'DB_USER',     'DATABASE_USER' );
+    define( 'DB_PASSWORD', 'DATABASE_PASS' );
+    define( 'DB_HOST',     'mysql.$(NAMESPACE).svc' );
+    define( 'DB_CHARSET',  'utf8' );
+    #define('FORCE_SSL_ADMIN', true);
+    define('SITE_URL', "https://$(DOMAIN)");
+    /* MySQL database table prefix. */
+    $table_prefix = '{{- .Values.table_prefix | default "wp_" -}}';
+    //Begin Really Simple SSL Load balancing fix
+    if ((isset($_ENV["HTTPS"]) && ("on" == $_ENV["HTTPS"]))
+    || (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "1") !== false))
+    || (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "on") !== false))
+    || (isset($_SERVER["HTTP_CF_VISITOR"]) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https") !== false))
+    || (isset($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"], "https") !== false))
+    || (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_X_FORWARDED_PROTO"], "https") !== false))
+    || (isset($_SERVER["HTTP_X_PROTO"]) && (strpos($_SERVER["HTTP_X_PROTO"], "SSL") !== false))
+    ) {
+      $_SERVER["HTTPS"] = "on";
+    }
+    //END Really Simple SSL 
+
+    /* Authentication Unique Keys and Salts. */
+    /* https://api.wordpress.org/secret-key/1.1/salt/ */
+    define( 'AUTH_KEY',         '{{ randAlphaNum 16 }}' );
+    define( 'SECURE_AUTH_KEY',  '{{ randAlphaNum 16 }}' );
+    define( 'LOGGED_IN_KEY',    '{{ randAlphaNum 16 }}' );
+    define( 'NONCE_KEY',        '{{ randAlphaNum 16 }}' );
+    define( 'AUTH_SALT',        '{{ randAlphaNum 16 }}' );
+    define( 'SECURE_AUTH_SALT', '{{ randAlphaNum 16 }}' );
+    define( 'LOGGED_IN_SALT',   '{{ randAlphaNum 16 }}' );
+    define( 'NONCE_SALT',       '{{ randAlphaNum 16 }}' );
+
+
+    /* Absolute path to the WordPress directory. */
+    if ( !defined('ABSPATH') )
+      define('ABSPATH', dirname(__FILE__) . '/');
+
+    /* Sets up WordPress vars and included files. */
+    require_once(ABSPATH . 'wp-settings.php');

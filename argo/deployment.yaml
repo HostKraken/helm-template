@@ -1,0 +1,211 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullname" . }}
+  labels:
+    {{- include "labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations: 
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        {{- include "selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: default
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: db-creds
+          csi:
+            driver: "secrets-store.csi.k8s.io"
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "vault-db"
+        - name: config-volume
+          configMap:
+            name: configmap
+        - name: wp-uploads-{{ .Chart.Name }}
+          persistentVolumeClaim:
+            claimName: wp-uploads-{{ .Chart.Name }}
+        - name: wp-root-{{ .Chart.Name }}
+          persistentVolumeClaim:
+            claimName: wp-root-{{ .Chart.Name }}
+      containers:
+        - name: {{ .Chart.Name }}
+          volumeMounts:
+          - name: "db-creds"
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
+          - name: config-volume
+            mountPath: /configs
+          - name: wp-root-{{ .Chart.Name }}
+            mountPath: /usr/html
+          - name: wp-uploads-{{ .Chart.Name }}
+            mountPath: /usr/html/wp-content/uploads
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-creds-secret
+                key: user
+          - name: DATABASE_PASS
+            valueFrom:
+              secretKeyRef:
+                name: db-creds-secret
+                key: pass
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: db-creds-secret
+                key: name
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command: 
+              - pgrep
+              - nginx
+            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 10 ) 90 }}
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            exec:
+              command: 
+              - pgrep
+              - nginx
+            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 10 ) 90 }}
+            periodSeconds: 5
+            failureThreshold: 30
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullname" . }}-mysql
+  labels:
+    {{- include "labels_mysql" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "selectorLabels_mysql" . | nindent 6 }}
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        {{- include "selectorLabels_mysql" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: default
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: db-creds
+          csi:
+            driver: "secrets-store.csi.k8s.io"
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "vault-db"
+        - name: config-volume
+          configMap:
+            name: configmap
+        - name: mysql-data-{{ .Chart.Name }}
+          persistentVolumeClaim:
+            claimName: mysql-data-{{ .Chart.Name }}
+      containers:
+        - name: {{ .Chart.Name }}-mysql
+          volumeMounts:
+          - name: "db-creds"
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
+          - name: mysql-data-{{ .Chart.Name }}
+            mountPath: /var/lib/mysql
+          - name: config-volume
+            mountPath: /configs
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.dbimage.repository }}:{{ .Values.dbimage.tag }}"
+          imagePullPolicy: {{ .Values.dbimage.pullPolicy }}
+          env: 
+          - name: MARIADB_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-creds-secret
+                key: user
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-creds-secret
+                key: pass
+          - name: MARIADB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: db-creds-secret
+                key: name
+          - name: MARIADB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-creds-secret
+                key: rootpw
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            {{- toYaml .Values.mysqlresources | nindent 12 }}      
+            
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+
+

@@ -1,0 +1,71 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup
+  annotations: {}
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+        {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 13 }}
+        {{- end }}
+          serviceAccountName: {{ include "serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 13 }}
+          volumes:
+            - name: config-volume
+              configMap:
+                name: configmap
+            - name: wp-uploads
+              persistentVolumeClaim:
+                claimName: wp-uploads
+          containers:
+            - name: dailybackup
+              env:
+                - name: DATABASE_HOST
+                  value: "mysql"
+                - name: DATABASE_USER
+                  valueFrom:
+                    secretKeyRef: 
+                      name: db-creds-secret
+                      key: user
+                - name: DATABASE_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-creds-secret
+                      key: name
+                - name: DATABASE_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-creds-secret
+                      key: pass
+                - name: BUCKET
+                  value: "hostkraken-backup"
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom: 
+                    secretKeyRef:
+                      name: do-backup-secret
+                      key: access_key
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: do-backup-secret
+                      key: secret_key
+                - name: SITE_NAME
+                  value: DOMAIN
+              volumeMounts:
+              - name: config-volume
+                mountPath: /configs
+              - name: wp-uploads
+                mountPath: /usr/html/wp-content/uploads
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 17 }}
+              image: "registry.hostkraken.com/dailybackup:latest"
+              imagePullPolicy: Always
+              args:
+              - /bin/backup-site REPLACE

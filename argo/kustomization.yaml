@@ -1,0 +1,8 @@
+vars:
+  - name: NAMESPACE
+    objref:
+      kind: Service
+      name: mysql
+      apiVersion: v1
+    fieldref:
+      fieldpath: metadata.namespace
