@@ -33,23 +33,23 @@ spec:
         - name: config-volume
           configMap:
             name: {{ include "hostkraken.domainDashed" . }}-configmap
-        - name: wp-uploads-{{ .Chart.Name }}
+        - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
-            claimName: wp-uploads-{{ .Chart.Name }}
-        - name: wp-root-{{ .Chart.Name }}
+            claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}
+        - name: wp-root-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
-            claimName: wp-root-{{ .Chart.Name }}
+            claimName: wp-root-{{ include "hostkraken.domainDashed" . }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "hostkraken.domainDashed" . }}
           volumeMounts:
           - name: "db-creds"
             mountPath: "/mnt/secrets-store"
             readOnly: true
           - name: config-volume
             mountPath: /configs
-          - name: wp-root-{{ .Chart.Name }}
+          - name: wp-root-{{ include "hostkraken.domainDashed" . }}
             mountPath: /usr/html
-          - name: wp-uploads-{{ .Chart.Name }}
+          - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
             mountPath: /usr/html/wp-content/uploads
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -140,16 +140,16 @@ spec:
         - name: config-volume
           configMap:
             name: {{ include "hostkraken.domainDashed" . }}-configmap
-        - name: mysql-data-{{ .Chart.Name }}
+        - name: mysql-data-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
-            claimName: mysql-data-{{ .Chart.Name }}
+            claimName: mysql-data-{{ include "hostkraken.domainDashed" . }}
       containers:
-        - name: {{ .Chart.Name }}-mysql
+        - name: {{ include "hostkraken.domainDashed" . }}-mysql
           volumeMounts:
           - name: {{ include "hostkraken.domainDashed" . }}-db-creds
             mountPath: "/mnt/secrets-store"
             readOnly: true
-          - name: mysql-data-{{ .Chart.Name }}
+          - name: mysql-data-{{ include "hostkraken.domainDashed" . }}
             mountPath: /var/lib/mysql
           - name: config-volume
             mountPath: /configs
