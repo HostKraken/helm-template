@@ -34,7 +34,7 @@ spec:
         {{- range .paths }}
           - path: {{ . }}
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ include "hostkraken.domainDashed" . }}
               servicePort: {{ $svcPort }}
         {{- end }}
   {{- end }}
