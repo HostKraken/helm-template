@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: REPLACE-configmap
+  name: {{ include "hostkraken.domainDashed" . }}-configmap
 data:
   disable-updates.php: |
     // hide update notifications
@@ -44,7 +44,7 @@ data:
     rm -f /usr/html/wp-admin/install.php; 
     sleep 1;
     while true; do
-    mysql -h REPLACE-mysql.wordpress.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME -e "select now();"
+    mysql -h {{ include "hostkraken.domainDashed" . }}-mysql.wordpress.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME -e "select now();"
     EC=$?
     if [ $EC -eq 0 ]; then
         break
@@ -54,7 +54,7 @@ data:
     if [[ -f /usr/html/database_migration ]]; then
       if [ "`echo /database/*.sql`" != "/database/*.sql" ]; then
           for sqlscript in $(ls /database/*.sql); do
-              mysql -h REPLACE-mysql.wordpress.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME <$sqlscript
+              mysql -h {{ include "hostkraken.domainDashed" . }}-mysql.wordpress.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME <$sqlscript
           done
           rm /usr/html/database_migration
       fi
@@ -96,7 +96,7 @@ data:
     define( 'DB_NAME',     'DATABASE_NAME' );
     define( 'DB_USER',     'DATABASE_USER' );
     define( 'DB_PASSWORD', 'DATABASE_PASS' );
-    define( 'DB_HOST',     'REPLACE-mysql.wordpress.svc' );
+    define( 'DB_HOST',     '{{ include "hostkraken.domainDashed" . }}-mysql.wordpress.svc' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
     define('SITE_URL', "https://{{ .Values.site_url }}");

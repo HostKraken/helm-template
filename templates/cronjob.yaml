@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: backup-REPLACE
+  name: backup-{{ include "hostkraken.domainDashed" . }}
   annotations: {}
 spec:
   schedule: "0 0 * * *"
@@ -14,35 +14,35 @@ spec:
           imagePullSecrets:
             {{- toYaml . | nindent 13 }}
         {{- end }}
-          serviceAccountName: {{ include "REPLACE.serviceAccountName" . }}
+          serviceAccountName: {{ include "hostkraken.serviceAccountName" . }}
           securityContext:
             {{- toYaml .Values.podSecurityContext | nindent 13 }}
           volumes:
             - name: config-volume
               configMap:
-                name: REPLACE-configmap
-            - name: wp-uploads-{{ .Chart.Name }}
+                name: {{ include "hostkraken.domainDashed" . }}-configmap
+            - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
               persistentVolumeClaim:
-                claimName: wp-uploads-{{ .Chart.Name }}
+                claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}
           containers:
-            - name: {{ .Chart.Name }}-dailybackup
+            - name: {{ include "hostkraken.domainDashed" . }}-dailybackup
               env:
                 - name: DATABASE_HOST
-                  value: "{{ .Chart.Name }}-mysql.wordpress.svc"
+                  value: "{{ include "hostkraken.domainDashed" . }}-mysql.wordpress.svc"
                 - name: DATABASE_USER
                   valueFrom:
                     secretKeyRef: 
-                      name: REPLACE-db-creds-secret
+                      name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                       key: user
                 - name: DATABASE_NAME
                   valueFrom:
                     secretKeyRef:
-                      name: REPLACE-db-creds-secret
+                      name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                       key: name
                 - name: DATABASE_PASS
                   valueFrom:
                     secretKeyRef:
-                      name: REPLACE-db-creds-secret
+                      name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                       key: pass
                 - name: BUCKET
                   value: "hostkraken-backup"
@@ -61,11 +61,11 @@ spec:
               volumeMounts:
               - name: config-volume
                 mountPath: /configs
-              - name: wp-uploads-{{ .Chart.Name }}
+              - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
                 mountPath: /usr/html/wp-content/uploads
               securityContext:
                 {{- toYaml .Values.securityContext | nindent 17 }}
               image: "registry.hostkraken.com/dailybackup:latest"
               imagePullPolicy: Always
               args:
-              - /bin/backup-site REPLACE
+              - /bin/backup-site {{ include "hostkraken.domainDashed" . }}

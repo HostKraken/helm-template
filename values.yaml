@@ -89,3 +89,7 @@ database:
   rootpass: penis
 
 site_url: REPLACE.local
+domain: SETME
+
+
+  

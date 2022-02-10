@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "REPLACE.fullname" . }}
+  name: {{ include "{{ include "hostkraken.domainDashed" . }}.fullname" . }}
   labels:
-    {{- include "REPLACE.labels" . | nindent 4 }}
+    {{- include "{{ include "hostkraken.domainDashed" . }}.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "REPLACE.selectorLabels" . | nindent 6 }}
+      {{- include "{{ include "hostkraken.domainDashed" . }}.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations: 
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "REPLACE.selectorLabels" . | nindent 8 }}
+        {{- include "{{ include "hostkraken.domainDashed" . }}.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -29,10 +29,10 @@ spec:
             driver: "secrets-store.csi.k8s.io"
             readOnly: true
             volumeAttributes:
-              secretProviderClass: "vault-db-REPLACE"
+              secretProviderClass: "vault-db-{{ include "hostkraken.domainDashed" . }}"
         - name: config-volume
           configMap:
-            name: REPLACE-configmap
+            name: {{ include "hostkraken.domainDashed" . }}-configmap
         - name: wp-uploads-{{ .Chart.Name }}
           persistentVolumeClaim:
             claimName: wp-uploads-{{ .Chart.Name }}
@@ -59,17 +59,17 @@ spec:
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: user
           - name: DATABASE_PASS
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: pass
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: name
           ports:
             - name: http
@@ -109,19 +109,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "REPLACE.fullname" . }}-mysql
+  name: {{ include "hostkraken.fullname" . }}-mysql
   labels:
-    {{- include "REPLACE.labels_mysql" . | nindent 4 }}
+    {{- include "hostkraken.labels_mysql" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "REPLACE.selectorLabels_mysql" . | nindent 6 }}
+      {{- include "hostkraken.selectorLabels_mysql" . | nindent 6 }}
   template:
     metadata:
       annotations: {}
       labels:
-        {{- include "REPLACE.selectorLabels_mysql" . | nindent 8 }}
+        {{- include "hostkraken.selectorLabels_mysql" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -131,22 +131,22 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
-        - name: REPLACE-db-creds
+        - name: {{ include "hostkraken.domainDashed" . }}-db-creds
           csi:
             driver: "secrets-store.csi.k8s.io"
             readOnly: true
             volumeAttributes:
-              secretProviderClass: "vault-db-REPLACE"
+              secretProviderClass: "vault-db-{{ include "hostkraken.domainDashed" . }}"
         - name: config-volume
           configMap:
-            name: REPLACE-configmap
+            name: {{ include "hostkraken.domainDashed" . }}-configmap
         - name: mysql-data-{{ .Chart.Name }}
           persistentVolumeClaim:
             claimName: mysql-data-{{ .Chart.Name }}
       containers:
         - name: {{ .Chart.Name }}-mysql
           volumeMounts:
-          - name: "REPLACE-db-creds"
+          - name: {{ include "hostkraken.domainDashed" . }}-db-creds
             mountPath: "/mnt/secrets-store"
             readOnly: true
           - name: mysql-data-{{ .Chart.Name }}
@@ -161,22 +161,22 @@ spec:
           - name: MARIADB_USER
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: user
           - name: MARIADB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: pass
           - name: MARIADB_DATABASE
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: name
           - name: MARIADB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: rootpw
           ports:
             - name: mysql
