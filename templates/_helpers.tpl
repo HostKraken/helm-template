@@ -55,12 +55,12 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "hostkraken.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "hostkraken.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "hostkraken.domainDashed" . }}
+app.kubernetes.io/instance: {{ include "hostkraken.domainDashed" . }}
 {{- end -}}
 {{- define "hostkraken.selectorLabels_mysql" -}}
-app.kubernetes.io/name: {{ include "hostkraken.name" . }}-mysql
-app.kubernetes.io/instance: {{ include "hostkraken.name" . }}-mysql
+app.kubernetes.io/name: {{ include "hostkraken.domainDashed" . }}-mysql
+app.kubernetes.io/instance: {{ include "hostkraken.domainDashed" . }}-mysql
 {{- end -}}
 
 {{- define "hostkraken.domainDashed" -}}
