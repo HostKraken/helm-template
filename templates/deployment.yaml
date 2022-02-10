@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "{{ include "hostkraken.domainDashed" . }}.fullname" . }}
+  name: {{ include "hostkraken.domainDashed" . }}
   labels:
     {{- include "{{ include "hostkraken.domainDashed" . }}.labels" . | nindent 4 }}
 spec:
