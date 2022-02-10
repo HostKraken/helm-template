@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: {{ include "hostkraken.domainDashed" . }}
   labels:
-    {{- include "{{ include "hostkraken.domainDashed" . }}.labels" . | nindent 4 }}
+    {{- include "hostkraken.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "{{ include "hostkraken.domainDashed" . }}.selectorLabels" . | nindent 6 }}
+      {{- include "hostkraken.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations: 
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "{{ include "hostkraken.domainDashed" . }}.selectorLabels" . | nindent 8 }}
+        {{- include "hostkraken.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
