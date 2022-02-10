@@ -91,5 +91,5 @@ database:
 site_url: REPLACE.local
 domain: SETME
 
-
+plugins: {}
   
