@@ -19,7 +19,7 @@ spec:
         - /create-secret-containerized.sh 
         env:
         - name: VAULT_ADDR
-          value: vault-0.default.svc
+          value: https://vault-0.default.svc:8200
         - name: SITENAME
           value: {{ .Values.domain }}
         image: registry.hostkraken.com/secret-maker:0.1
