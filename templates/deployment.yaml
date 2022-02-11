@@ -55,7 +55,7 @@ spec:
             mountPath: /usr/html/wp-content/uploads
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.domain }}:latest"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: DATABASE_USER
@@ -158,8 +158,8 @@ spec:
             mountPath: /configs
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.dbimage.repository }}:{{ .Values.dbimage.tag }}"
-          imagePullPolicy: {{ .Values.dbimage.pullPolicy }}
+          image: "docker.io/bitnami/mariadb:10.5.11-debian-10-r0"
+          imagePullPolicy: Always
           env: 
           - name: MARIADB_USER
             valueFrom:

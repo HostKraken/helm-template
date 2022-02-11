@@ -4,15 +4,6 @@
 
 replicaCount: 1
 
-image:
-  repository:  registry.hostkraken.com/DOMAIN
-  pullPolicy: Always
-  tag: latest
-dbimage:
-  repository: docker.io/bitnami/mariadb
-  pullPolicy: Always
-  tag: 10.5.11-debian-10-r0
-
 imagePullSecrets:
    - name: registry-business-business
 nameOverride: ""
