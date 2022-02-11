@@ -55,7 +55,7 @@ spec:
             mountPath: /usr/html/wp-content/uploads
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.domain }}:latest"
+          image: "registry.hostkraken.com/{{ .Values.domain }}:latest"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: DATABASE_USER
