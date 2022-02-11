@@ -1,4 +1,4 @@
-# Default values for REPLACE.
+# Default values for hostkraken wordpress chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -6,8 +6,6 @@ replicaCount: 1
 
 imagePullSecrets:
    - name: registry-business-business
-nameOverride: ""
-fullnameOverride: ""
 
 serviceAccount: 
   # Specifies whether a service account should be created
@@ -19,37 +17,8 @@ serviceAccount:
   name:
 
 podSecurityContext: {}
-  # fsGroup: 2000
 
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-service:
-  type: LoadBalancer
-  port: 80
-
-
-ingress:
-  enabled: true
-  annotations: #{}
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: "letsencrypt"
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: DOMAIN
-      paths: ["/"]
-    - host: www.DOMAIN
-      paths: ["/"]
-  tls: #[]
-    - secretName: DOMAIN-tls
-      hosts:
-        - DOMAIN
-        - www.DOMAIN
 
 resources:
   limits:
@@ -66,20 +35,6 @@ mysqlresources:
     cpu: 512m
     memory: 512Mi
 
-nodeSelector: {}
-#node-role.kubernetes.io/worker: "true"
-
-tolerations: []
-
-affinity: {}
-
-database:
-  user: REPLACE
-  pass: REPLACE
-  name: REPLACE
-  rootpass: penis
-
-site_url: REPLACE.local
 domain: SETME
 
 plugins: {}
