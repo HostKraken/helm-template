@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-secret-{{ include "hostkraken.domainDashed" . }}
+  namespace: {{ include "hostkraken.domainDashed" . }}
+spec:
+  backoffLimit: 1
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      labels:
+        job-name: create-secret-{{ include "hostkraken.domainDashed" . }}
+    spec:
+      containers:
+      - args:
+        - /create-secret-containerized.sh 
+        env:
+        - name: VAULT_ADDR
+          value: vault-0.default.svc
+        - name: SITENAME
+          value: {{ .Values.domain }}
+        image: registry.hostkraken.com/secret-maker:0.1
+        imagePullPolicy: Always
+        name: secret-maker
+        resources: {}
+        securityContext: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-business-business
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: secret-creator
+      serviceAccountName: secret-creator

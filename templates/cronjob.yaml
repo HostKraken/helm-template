@@ -2,6 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: backup-{{ include "hostkraken.domainDashed" . }}
+  namespace: {{ include "hostkraken.domainDashed" . }}
   annotations: {}
 spec:
   schedule: "0 0 * * *"
