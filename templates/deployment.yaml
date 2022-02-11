@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "hostkraken.labels" . | nindent 4 }}
 spec:
-  revisionHistoryLimit: 0
+  revisionHistoryLimit: 1
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -115,7 +115,7 @@ metadata:
   labels:
     {{- include "hostkraken.labels_mysql" . | nindent 4 }}
 spec:
-  revisionHistoryLimit: 0
+  revisionHistoryLimit: 1
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
