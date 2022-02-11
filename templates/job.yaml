@@ -13,7 +13,7 @@ spec:
         job-name: create-secret-{{ include "hostkraken.domainDashed" . }}
     spec:
       containers:
-      - args:
+      - command:
         - /create-secret-containerized.sh 
         env:
         - name: VAULT_ADDR
