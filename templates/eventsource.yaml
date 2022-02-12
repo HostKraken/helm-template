@@ -3,6 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
   name: github
+  namespace: {{ include "hostkraken.domainDashed" . }}
 spec:
   github:
     example:
@@ -59,6 +60,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: webhook-eventsource
+  namespace: {{ include "hostkraken.domainDashed" . }}
 spec:
   ports:
   - port: 12000

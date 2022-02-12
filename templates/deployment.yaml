@@ -111,6 +111,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: {{ include "hostkraken.domainDashed" . }}
   name: {{ include "hostkraken.domainDashed" . }}-mysql
   labels:
     {{- include "hostkraken.labels_mysql" . | nindent 4 }}
