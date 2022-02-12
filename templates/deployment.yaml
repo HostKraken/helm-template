@@ -56,7 +56,7 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "registry.hostkraken.com/{{ .Values.domain }}:latest"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: Always
           env:
           - name: DATABASE_USER
             valueFrom:
