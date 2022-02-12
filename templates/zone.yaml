@@ -1,0 +1,11 @@
+apiVersion: crds.kubeflare.io/v1alpha1
+kind: Zone
+metadata:
+  name: {{ .Values.domain }}
+spec:
+  apiToken: kubeflare-token
+  settings:
+    alwaysUseHttps: true
+    alwaysOnline: true
+    minify:
+      css: true
