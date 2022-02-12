@@ -34,3 +34,31 @@ spec:
             backend:
               serviceName: {{ $fullName }}
               servicePort: 80
+---
+{{- $fullName := include "hostkraken.domainDashed" . -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: webhook-ingress
+  namespace: {{ include "hostkraken.domainDashed" . }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  tls:
+    - hosts:
+      - "{{ include "hostkraken.domainDashed" . }}.webhook.hostkraken.com"
+      secretName: {{ include "hostkraken.domainDashed" . }}-webhook-tls
+  rules:
+    - host: "{{ include "hostkraken.domainDashed" . }}.webhook.hostkraken.com"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: webhook-service
+              servicePort: 12000
+
