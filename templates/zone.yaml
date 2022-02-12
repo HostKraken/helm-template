@@ -2,6 +2,7 @@ apiVersion: crds.kubeflare.io/v1alpha1
 kind: Zone
 metadata:
   name: {{ .Values.domain }}
+  namespace: {{ include "hostkraken.domainDashed" . }}
 spec:
   apiToken: kubeflare-token
   settings:
