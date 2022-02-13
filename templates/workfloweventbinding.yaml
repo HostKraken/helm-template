@@ -5,7 +5,7 @@ metadata:
   namespace: argocd-workflows
 spec:
   event:
-    selector: metadata["x-github-event"] == ["push"]
+    selector: metadata["x-github-event"] == ["push"] && payload.repository.name == "{{ .Values.domain }}"
   submit:
     workflowTemplateRef:
       name: buildkit
