@@ -35,5 +35,29 @@ spec:
                 entrypoint: image          # We reference our first "template" here
                 workflowTemplateRef: 
                   name: buildkit
+    - template:
+        name: cycle-pods
+        argoWorkflow:
+          group: argoproj.io
+          version: v1alpha1
+          resource: workflows
+          operation: submit
+          metadata:
+            generateName: podcycler-{{ include "hostkraken.domainDashed" . }}-
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: podcycler-{{ include "hostkraken.domainDashed" . }}
+              spec:
+                arguments:
+                  parameters:
+                    - name: domain-dashed
+                      value: {{ include "hostkraken.domainDashed" . }}
+                serviceAccountName: operate-workflow-sa
+                entrypoint: cycle          # We reference our first "template" here
+                workflowTemplateRef: 
+                  name: pod-cycler                  
                   
                   
