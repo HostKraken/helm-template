@@ -1,8 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: webhook
-  namespace: argo-events
+  generateName: webhook-{{ include "hostkraken.domainDashed" . }}
+  namespace: argocd-workflows
 spec:
   template:
     serviceAccountName: operate-workflow-sa
