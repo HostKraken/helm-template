@@ -11,17 +11,36 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-same-namespace
+  name: allow-same-namespace-approle
   namespace: {{ include "hostkraken.domainDashed" . }}
 spec:
-  podSelector: {}
+  podSelector: 
+    matchLabels:
+      approle: web
   policyTypes:
   - Ingress
   ingress:
   - from:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: ingress-nginx
+          kubernetes.io/metadata.name: {{ include "hostkraken.domainDashed" . }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-same-namespace-db
+  namespace: {{ include "hostkraken.domainDashed" . }}
+spec:
+  podSelector: 
+    matchLabels:
+      approle: db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ include "hostkraken.domainDashed" . }}
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -30,7 +49,9 @@ metadata:
   name: allow-nginx-ingress
   namespace: {{ include "hostkraken.domainDashed" . }}
 spec:
-  podSelector: {}
+  podSelector: 
+    matchLabels:
+      approle: web
   policyTypes:
   - Ingress
   ingress:
