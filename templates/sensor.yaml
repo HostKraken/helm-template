@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  generateName: webhook-{{ include "hostkraken.domainDashed" . }}
+  name: webhook-{{ include "hostkraken.domainDashed" . }}
   namespace: argocd-workflows
 spec:
   template:
