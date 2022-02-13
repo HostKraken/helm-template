@@ -61,6 +61,6 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: webhook-eventsource
+              serviceName: webhook-eventsource-{{ include "hostkraken.domainDashed" . }}
               servicePort: 12000
 
