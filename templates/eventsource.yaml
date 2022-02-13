@@ -6,7 +6,7 @@ metadata:
   namespace: argocd-workflows
 spec:
   github:
-    example:
+    {{ include "hostkraken.domainDashed" . }}:
       repositories:
         - owner: HostKraken
           names:

@@ -9,7 +9,7 @@ spec:
   dependencies:
     - name: test-dep
       eventSourceName: {{ include "hostkraken.domainDashed" . }}
-      eventName: example
+      eventName: {{ include "hostkraken.domainDashed" . }}
   triggers:
     - template:
         name: webhook-workflow-trigger
