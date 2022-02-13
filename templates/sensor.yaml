@@ -32,7 +32,7 @@ spec:
                     - name: domain
                       value: {{ .Values.domain }}
                 serviceAccountName: operate-workflow-sa
-                entrypoint: build-trigger           # We reference our first "template" here
+                entrypoint: image          # We reference our first "template" here
                 workflowTemplateRef: 
                   name: buildkit
                   
