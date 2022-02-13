@@ -27,9 +27,13 @@ spec:
               metadata:
                 name: imgbuild
               spec:
+                arguments:
+                  parameters:
+                    - name: domain
+                      value: {{ .Values.domain }}
                 serviceAccountName: operate-workflow-sa
                 entrypoint: build-trigger           # We reference our first "template" here
                 workflowTemplateRef: 
                   name: buildkit
-                  clusterScope: true
+                  
                   
