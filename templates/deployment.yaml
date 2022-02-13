@@ -5,6 +5,7 @@ metadata:
   namespace: {{ include "hostkraken.domainDashed" . }}
   labels:
     {{- include "hostkraken.labels" . | nindent 4 }}
+    approle: web
 spec:
   revisionHistoryLimit: 1
   replicas: {{ .Values.replicaCount }}

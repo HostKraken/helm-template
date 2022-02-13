@@ -36,7 +36,6 @@ Common labels
 */}}
 {{- define "hostkraken.labels" -}}
 helm.sh/chart: {{ include "hostkraken.chart" . }}
-approle: web
 {{ include "hostkraken.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
