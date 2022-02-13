@@ -5,7 +5,7 @@ metadata:
   name: {{ include "hostkraken.domainDashed" . }}
   namespace: argo-events
 spec:
-  {{ include "hostkraken.domainDashed" . }}:
+  github:
     example:
       repositories:
         - owner: HostKraken
