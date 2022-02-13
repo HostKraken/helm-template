@@ -14,6 +14,9 @@ spec:
     - template:
         name: webhook-workflow-trigger
         k8s:
+          group: argoproj.io
+          version: v1alpha1
+          resource: workflows
           operation: create
           source:
             resource:
@@ -23,11 +26,10 @@ spec:
                 generateName: steps-
               spec:
                 entrypoint: build-trigger           # We reference our first "template" here
-
                 templates:
                 - name: build-trigger               # The first "template" in this Workflow, it is referenced by "entrypoint"
                   steps:                    # The type of this "template" is "steps"
                   - - name: hello
                       template: buildkit    # We reference our second "template" here
-                      arguments:
+                      inputs:
                         parameters: [{name: domain, value: "{{ .Values.domain }}"}]
