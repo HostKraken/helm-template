@@ -127,6 +127,7 @@ spec:
       annotations: {}
       labels:
         {{- include "hostkraken.selectorLabels_mysql" . | nindent 8 }}
+        approle: db
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
