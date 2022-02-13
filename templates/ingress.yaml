@@ -44,7 +44,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: webhook-ingress
+  name: webhook-ingress-{{ include "hostkraken.domainDashed" . }}
   namespace: argocd-workflows
   annotations:
     kubernetes.io/ingress.class: nginx
