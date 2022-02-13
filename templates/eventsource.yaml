@@ -67,5 +67,5 @@ spec:
     protocol: TCP
     targetPort: 12000
   selector:
-    eventsource-name: github
+    eventsource-name: {{ include "hostkraken.domainDashed" . }}
   type: ClusterIP
