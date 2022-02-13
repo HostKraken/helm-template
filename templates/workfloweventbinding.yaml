@@ -5,8 +5,7 @@ metadata:
   namespace: argocd-workflows
 spec:
   event:
-    selector: 
-      eventsource-name: butthole-gwpuckett-com
+    selector: metadata["x-github-event"] == ["push"]
   submit:
     workflowTemplateRef:
       name: buildkit
