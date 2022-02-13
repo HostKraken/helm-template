@@ -19,7 +19,7 @@ spec:
   - Ingress
   ingress:
   - from:
-  - namespaceSelector:
+    namespaceSelector:
       matchLabels:
         kubernetes.io/metadata.name: {{ include "hostkraken.domainDashed" . }}
 
@@ -35,6 +35,6 @@ spec:
   - Ingress
   ingress:
   - from:
-  - namespaceSelector:
+    namespaceSelector:
       matchLabels:
         kubernetes.io/metadata.name: ingress-nginx
