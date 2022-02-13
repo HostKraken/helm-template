@@ -23,14 +23,12 @@ spec:
               apiVersion: argoproj.io/v1alpha1
               kind: Workflow
               metadata:
-                generateName: steps-
+                generateName: imgbuild-
                 namespace: argocd-workflows
               spec:
+                serviceAccountName: operate-workflow-sa
                 entrypoint: build-trigger           # We reference our first "template" here
-                templates:
-                - name: build-trigger               # The first "template" in this Workflow, it is referenced by "entrypoint"
-                  steps:                    # The type of this "template" is "steps"
-                  - - name: hello
-                      template: buildkit    # We reference our second "template" here
-                      inputs:
-                        parameters: [{name: domain, value: "{{ .Values.domain }}"}]
+                workflowTemplateRef: 
+                  name: buildkit
+                  clusterScope: true
+                  
