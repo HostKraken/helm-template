@@ -49,14 +49,14 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt"
-    external-dns.alpha.kubernetes.io/hostname: "{{ include "hostkraken.domainDashed" . }}.webhook.hostkraken.com"
+    external-dns.alpha.kubernetes.io/hostname: "{{ include "hostkraken.domainDashed" . }}-webhook.hostkraken.com"
 spec:
   tls:
     - hosts:
-      - "{{ include "hostkraken.domainDashed" . }}.webhook.hostkraken.com"
+      - "{{ include "hostkraken.domainDashed" . }}-webhook.hostkraken.com"
       secretName: {{ include "hostkraken.domainDashed" . }}-webhook-tls
   rules:
-    - host: "{{ include "hostkraken.domainDashed" . }}.webhook.hostkraken.com"
+    - host: "{{ include "hostkraken.domainDashed" . }}-webhook.hostkraken.com"
       http:
         paths:
           - path: /
