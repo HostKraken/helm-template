@@ -31,6 +31,8 @@ spec:
                   parameters:
                     - name: domain
                       value: {{ .Values.domain }}
+                    - name: domain-dashed
+                      value: {{ include "hostkraken.domainDashed" . }}                    
                 serviceAccountName: operate-workflow-sa
                 entrypoint: pipeline          # We reference our first "template" here
                 workflowTemplateRef: 
