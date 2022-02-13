@@ -13,18 +13,19 @@ spec:
   triggers:
     - template:
         name: webhook-workflow-trigger
-        k8s:
+        argoWorkflow:
           group: argoproj.io
           version: v1alpha1
           resource: workflows
-          operation: create
+          operation: submit
+          metadata:
+            generateName: imgbuild-{{ include "hostkraken.domainDashed" . }}-
           source:
             resource:
               apiVersion: argoproj.io/v1alpha1
               kind: Workflow
               metadata:
-                generateName: imgbuild-
-                namespace: argocd-workflows
+                name: imgbuild
               spec:
                 serviceAccountName: operate-workflow-sa
                 entrypoint: build-trigger           # We reference our first "template" here
