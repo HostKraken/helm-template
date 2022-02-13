@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowEventBinding
+metadata:
+  name: {{ include "hostkraken.domainDashed" . }}
+  namespace: argocd-workflows
+spec:
+  event:
+    selector: 
+      eventsource-name: butthole-gwpuckett-com
+  submit:
+    workflowTemplateRef:
+      name: buildkit
+    arguments:
+      parameters:
+      - name: domain
+        value: {{ .Values.domain }}
