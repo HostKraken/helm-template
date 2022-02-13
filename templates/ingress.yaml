@@ -61,6 +61,6 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: webhook-service
+              serviceName: webhook-eventsource
               servicePort: 12000
 
