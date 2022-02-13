@@ -11,7 +11,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-deny-ingress
+  name: allow-same-namespace
   namespace: {{ include "hostkraken.domainDashed" . }}
 spec:
   podSelector: {}
@@ -27,7 +27,7 @@ ingress:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-deny-ingress
+  name: allow-nginx-ingress
   namespace: {{ include "hostkraken.domainDashed" . }}
 spec:
   podSelector: {}
