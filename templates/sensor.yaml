@@ -24,6 +24,7 @@ spec:
               kind: Workflow
               metadata:
                 generateName: steps-
+                namespace: argocd-workflows
               spec:
                 entrypoint: build-trigger           # We reference our first "template" here
                 templates:
