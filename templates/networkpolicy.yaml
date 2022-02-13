@@ -17,11 +17,11 @@ spec:
   podSelector: {}
   policyTypes:
   - Ingress
-ingress:
-- from:
-- namespaceSelector:
-    matchLabels:
-      kubernetes.io/metadata.name: {{ include "hostkraken.domainDashed" . }}
+  ingress:
+  - from:
+  - namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: {{ include "hostkraken.domainDashed" . }}
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -33,8 +33,8 @@ spec:
   podSelector: {}
   policyTypes:
   - Ingress
-ingress:
-- from:
-- namespaceSelector:
-    matchLabels:
-      kubernetes.io/metadata.name: ingress-nginx
+  ingress:
+  - from:
+  - namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: ingress-nginx
