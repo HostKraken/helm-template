@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
-  name: github
+  name: {{ include "hostkraken.domainDashed" . }}
   namespace: argo-events
 spec:
   github:
