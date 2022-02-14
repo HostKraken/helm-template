@@ -22,6 +22,26 @@ spec:
           value: https://vault-0.default.svc:8200
         - name: SITENAME
           value: {{ .Values.domain }}
+        - name: CLOUDFLARE_EMAIL
+          valueFrom:
+              secretKeyRef:
+                name: register-secret
+                key: cf_email
+        - name: CLOUDFLARE_API_KEY
+          valueFrom:
+              secretKeyRef:
+                name: register-secret
+                key: cf_key
+        - name: CF_ACCOUNT_ID
+          valueFrom:
+              secretKeyRef:
+                name: register-secret
+                key: cf_account
+        - name: NAMESILO_KEY
+          valueFrom:
+              secretKeyRef:
+                name: register_secret
+                key: ns_key
         image: registry.hostkraken.com/secret-maker:0.1
         imagePullPolicy: Always
         name: secret-maker
