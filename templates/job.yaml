@@ -12,11 +12,22 @@ spec:
       labels:
         job-name: create-secret-{{ include "hostkraken.domainDashed" . }}
     spec:
+      volumes:
+        - name: register-secret
+          csi:
+            driver: "secrets-store.csi.k8s.io"
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "register-secret"
       containers:
       - command:
         - /bin/sh
         args:
         - /create-secret-containerized.sh 
+        volumeMounts:
+          - name: "register-secret"
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
         env:
         - name: VAULT_ADDR
           value: https://vault-0.default.svc:8200
