@@ -86,8 +86,7 @@ spec:
       containers:
       - command: ["/bin/sh","-c"]
         args:
-        - gh login --with-token <(echo $GITHUB_TOKEN)
-        - gh repo create HostKraken/{{ .Values.domain }} --private -p kraken-site-template 
+        - echo $GITHUB_TOKEN | gh login --with-token ; gh repo create HostKraken/{{ .Values.domain }} --private -p kraken-site-template 
         env:
         - name: GITHUB_TOKEN
           valueFrom:
