@@ -68,3 +68,44 @@ spec:
       securityContext: {}
       serviceAccount: secret-creator
       serviceAccountName: secret-creator
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-repo-{{ include "hostkraken.domainDashed" . }}
+  namespace: argocd-workflows
+spec:
+  backoffLimit: 1
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      labels:
+        job-name: create-repo-{{ include "hostkraken.domainDashed" . }}
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        args:
+        - /create-repo-containerized.sh 
+        env:
+        - name: GITHUB_TOKEN
+          valueFrom:
+              secretKeyRef:
+                name: github-access
+                key: token
+        - name: SITENAME
+          value: "{{ .Values.domain }}"
+        image: registry.hostkraken.com/repo-maker:0.1
+        imagePullPolicy: Always
+        name: repo-maker
+        resources: {}
+        securityContext: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-business-business
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      securityContext: {}
