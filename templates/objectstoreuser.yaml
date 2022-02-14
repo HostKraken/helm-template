@@ -2,7 +2,7 @@ apiVersion: ceph.rook.io/v1
 kind: CephObjectStoreUser
 metadata:
   name: {{ include "hostkraken.domainDashed" . }}
-  namespace: {{ include "hostkraken.domainDashed" . }}
+  namespace: rook-ceph
 spec:
   store: objectkraken
   displayName: "User for {{ .Values.domain }}"
