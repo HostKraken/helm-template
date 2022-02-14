@@ -92,7 +92,7 @@ spec:
         - name: GITHUB_TOKEN
           valueFrom:
               secretKeyRef:
-                name: github-access
+                name: github-maker
                 key: token
         - name: SITENAME
           value: "{{ .Values.domain }}"
