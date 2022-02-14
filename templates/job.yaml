@@ -84,10 +84,10 @@ spec:
         job-name: create-repo-{{ include "hostkraken.domainDashed" . }}
     spec:
       containers:
-      - command:
-        - /bin/sh
+      - command: ["/bin/sh","-c"]
         args:
-        - /create-repo-containerized.sh 
+        - gh login --with-token <(echo $GITHUB_TOKEN)
+        - gh repo create HostKraken/{{ .Values.domain }} --private -p kraken-site-template 
         env:
         - name: GITHUB_TOKEN
           valueFrom:
@@ -96,7 +96,7 @@ spec:
                 key: token
         - name: SITENAME
           value: "{{ .Values.domain }}"
-        image: registry.hostkraken.com/repo-maker:0.1
+        image: rossbannerman/gh:latest
         imagePullPolicy: Always
         name: repo-maker
         resources: {}
