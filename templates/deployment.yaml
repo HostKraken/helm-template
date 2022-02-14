@@ -1,20 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "REPLACE.fullname" . }}
+  name: {{ include "hostkraken.domainDashed" . }}
+  namespace: {{ include "hostkraken.domainDashed" . }}
   labels:
-    {{- include "REPLACE.labels" . | nindent 4 }}
+    {{- include "hostkraken.labels" . | nindent 4 }}
 spec:
+  revisionHistoryLimit: 1
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "REPLACE.selectorLabels" . | nindent 6 }}
+      {{- include "hostkraken.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations: 
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{- include "REPLACE.selectorLabels" . | nindent 8 }}
+        {{- include "hostkraken.selectorLabels" . | nindent 8 }}
+        approle: web
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -29,47 +32,47 @@ spec:
             driver: "secrets-store.csi.k8s.io"
             readOnly: true
             volumeAttributes:
-              secretProviderClass: "vault-db-REPLACE"
+              secretProviderClass: "vault-db-{{ include "hostkraken.domainDashed" . }}"
         - name: config-volume
           configMap:
-            name: REPLACE-configmap
-        - name: wp-uploads-{{ .Chart.Name }}
+            name: {{ include "hostkraken.domainDashed" . }}-configmap
+        - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
-            claimName: wp-uploads-{{ .Chart.Name }}
-        - name: wp-root-{{ .Chart.Name }}
+            claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}
+        - name: wp-root-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
-            claimName: wp-root-{{ .Chart.Name }}
+            claimName: wp-root-{{ include "hostkraken.domainDashed" . }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "hostkraken.domainDashed" . }}
           volumeMounts:
           - name: "db-creds"
             mountPath: "/mnt/secrets-store"
             readOnly: true
           - name: config-volume
             mountPath: /configs
-          - name: wp-root-{{ .Chart.Name }}
+          - name: wp-root-{{ include "hostkraken.domainDashed" . }}
             mountPath: /usr/html
-          - name: wp-uploads-{{ .Chart.Name }}
+          - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
             mountPath: /usr/html/wp-content/uploads
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "registry.hostkraken.com/{{ .Values.domain }}:latest"
+          imagePullPolicy: Always
           env:
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: user
           - name: DATABASE_PASS
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: pass
           - name: DATABASE_NAME
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: name
           ports:
             - name: http
@@ -109,19 +112,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "REPLACE.fullname" . }}-mysql
+  namespace: {{ include "hostkraken.domainDashed" . }}
+  name: {{ include "hostkraken.domainDashed" . }}-mysql
   labels:
-    {{- include "REPLACE.labels_mysql" . | nindent 4 }}
+    {{- include "hostkraken.labels_mysql" . | nindent 4 }}
 spec:
+  revisionHistoryLimit: 1
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "REPLACE.selectorLabels_mysql" . | nindent 6 }}
+      {{- include "hostkraken.selectorLabels_mysql" . | nindent 6 }}
   template:
     metadata:
       annotations: {}
       labels:
-        {{- include "REPLACE.selectorLabels_mysql" . | nindent 8 }}
+        {{- include "hostkraken.selectorLabels_mysql" . | nindent 8 }}
+        approle: db
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -131,52 +137,52 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
-        - name: REPLACE-db-creds
+        - name: {{ include "hostkraken.domainDashed" . }}-db-creds
           csi:
             driver: "secrets-store.csi.k8s.io"
             readOnly: true
             volumeAttributes:
-              secretProviderClass: "vault-db-REPLACE"
+              secretProviderClass: "vault-db-{{ include "hostkraken.domainDashed" . }}"
         - name: config-volume
           configMap:
-            name: REPLACE-configmap
-        - name: mysql-data-{{ .Chart.Name }}
+            name: {{ include "hostkraken.domainDashed" . }}-configmap
+        - name: mysql-data-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
-            claimName: mysql-data-{{ .Chart.Name }}
+            claimName: mysql-data-{{ include "hostkraken.domainDashed" . }}
       containers:
-        - name: {{ .Chart.Name }}-mysql
+        - name: {{ include "hostkraken.domainDashed" . }}-mysql
           volumeMounts:
-          - name: "REPLACE-db-creds"
+          - name: {{ include "hostkraken.domainDashed" . }}-db-creds
             mountPath: "/mnt/secrets-store"
             readOnly: true
-          - name: mysql-data-{{ .Chart.Name }}
+          - name: mysql-data-{{ include "hostkraken.domainDashed" . }}
             mountPath: /var/lib/mysql
           - name: config-volume
             mountPath: /configs
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.dbimage.repository }}:{{ .Values.dbimage.tag }}"
-          imagePullPolicy: {{ .Values.dbimage.pullPolicy }}
+          image: "docker.io/bitnami/mariadb:10.5.11-debian-10-r0"
+          imagePullPolicy: Always
           env: 
           - name: MARIADB_USER
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: user
           - name: MARIADB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: pass
           - name: MARIADB_DATABASE
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: name
           - name: MARIADB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: REPLACE-db-creds-secret
+                name: {{ include "hostkraken.domainDashed" . }}-db-creds-secret
                 key: rootpw
           ports:
             - name: mysql

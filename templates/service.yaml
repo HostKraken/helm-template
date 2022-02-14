@@ -1,25 +1,29 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "REPLACE.fullname" . }}
+  name: {{ include "hostkraken.domainDashed" . }}
+  namespace: {{ include "hostkraken.domainDashed" . }}
   labels:
-    {{- include "REPLACE.labels" . | nindent 4 }}
+    {{- include "hostkraken.labels" . | nindent 4 }}
+    approle: web
 spec:
   ports:
-    - port: {{ .Values.service.port }}
+    - port: 80
       targetPort: http
       protocol: TCP
       name: http
   selector:
-    {{- include "REPLACE.selectorLabels" . | nindent 4 }}
+    {{- include "hostkraken.selectorLabels" . | nindent 4 }}
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "REPLACE.fullname" . }}-mysql
+  namespace: {{ include "hostkraken.domainDashed" . }}
+  name: {{ include "hostkraken.domainDashed" . }}-mysql
   labels:
-    {{- include "REPLACE.labels_mysql" . | nindent 4 }}
+    {{- include "hostkraken.labels_mysql" . | nindent 4 }}
+    approle: db
 spec:
   ports:
     - port: 3306
@@ -27,5 +31,5 @@ spec:
       protocol: TCP
       name: mysql
   selector:
-    {{- include "REPLACE.selectorLabels_mysql" . | nindent 4 }}
+    {{- include "hostkraken.selectorLabels_mysql" . | nindent 4 }}
 
