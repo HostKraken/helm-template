@@ -25,6 +25,12 @@ spec:
             - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
               persistentVolumeClaim:
                 claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}
+            - name: db-creds
+              csi:
+                driver: "secrets-store.csi.k8s.io"
+                readOnly: true
+                volumeAttributes:
+                  secretProviderClass: "vault-s3-{{ include "hostkraken.domainDashed" . }}"                
           containers:
             - name: {{ include "hostkraken.domainDashed" . }}-dailybackup
               env:
@@ -60,6 +66,9 @@ spec:
                 - name: SITE_NAME
                   value: {{ .Values.domain }}
               volumeMounts:
+              - name: "s3-creds"
+                mountPath: "/mnt/secrets-store"
+                readOnly: true              
               - name: config-volume
                 mountPath: /configs
               - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
