@@ -2,6 +2,7 @@ apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
   name: {{ include "hostkraken.domainDashed" . }}
+  namespace: {{ include "hostkraken.domainDashed" . }}
 spec:
   # To create a new bucket specify either `bucketName` or
   # `generateBucketName` here. Both cannot be used. To access
