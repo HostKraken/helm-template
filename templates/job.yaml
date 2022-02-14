@@ -40,7 +40,7 @@ spec:
         - name: NAMESILO_KEY
           valueFrom:
               secretKeyRef:
-                name: register_secret
+                name: register-secret
                 key: ns_key
         image: registry.hostkraken.com/secret-maker:0.1
         imagePullPolicy: Always
