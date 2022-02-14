@@ -2,7 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: backup-{{ include "hostkraken.domainDashed" . }}
-  namespace: {{ include "hostkraken.domainDashed" . }}
+  namespace: wordpress
   annotations: {}
 spec:
   schedule: "0 0 * * *"
@@ -50,13 +50,13 @@ spec:
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom: 
                     secretKeyRef:
-                      name: do-backup-secret
-                      key: access_key
+                      name: hostkraken-backup
+                      key: AWS_ACCESS_KEY_ID
                 - name: AWS_SECRET_ACCESS_KEY
                   valueFrom:
                     secretKeyRef:
-                      name: do-backup-secret
-                      key: secret_key
+                      name: hostkraken-backup
+                      key: AWS_SECRET_ACCESS_KEY
                 - name: SITE_NAME
                   value: {{ .Values.domain }}
               volumeMounts:
