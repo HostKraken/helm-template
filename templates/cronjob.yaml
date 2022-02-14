@@ -35,7 +35,7 @@ spec:
             - name: {{ include "hostkraken.domainDashed" . }}-dailybackup
               env:
                 - name: DATABASE_HOST
-                  value: "{{ include "hostkraken.domainDashed" . }}-mysql.wordpress.svc"
+                  value: "{{ include "hostkraken.domainDashed" . }}-mysql.{{ include "hostkraken.domainDashed" . }}.svc"
                 - name: DATABASE_USER
                   valueFrom:
                     secretKeyRef: 
