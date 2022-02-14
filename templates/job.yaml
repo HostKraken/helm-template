@@ -86,7 +86,7 @@ spec:
       containers:
       - command: ["/bin/sh","-c"]
         args:
-        - "echo $GITHUB_TOKEN | gh auth login --with-token ; gh repo create --private -p kraken-site-template HostKraken/{{ .Values.domain }} " 
+        - "echo $GITHUB_TOKEN | gh auth login --with-token ; gh repo create --private --p kraken-site-template HostKraken/{{ .Values.domain }} " 
         env:
         - name: GITHUB_TOKEN
           valueFrom:
@@ -95,7 +95,7 @@ spec:
                 key: token
         - name: SITENAME
           value: "{{ .Values.domain }}"
-        image: rossbannerman/gh:latest
+        image: registry.hostkraken.com/github-cli:0.1
         imagePullPolicy: Always
         name: repo-maker
         resources: {}
