@@ -25,7 +25,7 @@ spec:
             - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
               persistentVolumeClaim:
                 claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}
-            - name: db-creds
+            - name: s3-creds
               csi:
                 driver: "secrets-store.csi.k8s.io"
                 readOnly: true
