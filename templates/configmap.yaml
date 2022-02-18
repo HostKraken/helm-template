@@ -68,7 +68,7 @@ data:
     /usr/bin/wp-cli plugin deactivate hello --path=/usr/html
     /usr/bin/wp-cli plugin uninstall hello --path=/usr/html
     fi
-    {{- range {{ include "hostkraken.Plugins" . }} }}
+    {{- range $Plugins }}
     if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' ; then
     /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html || true    
     fi
