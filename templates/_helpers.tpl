@@ -67,6 +67,10 @@ app.kubernetes.io/instance: {{ include "hostkraken.domainDashed" . }}-mysql
   {{ .Values.domain | replace "." "-" }}
 {{- end -}}
 
+{{- define "hostkraken.Plugins -}}
+  {{ splitList "," .Values.plugins }}
+{{- end -}}
+
 {{/*
 Create the name of the service account to use
 */}}
