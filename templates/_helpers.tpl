@@ -67,7 +67,7 @@ app.kubernetes.io/instance: {{ include "hostkraken.domainDashed" . }}-mysql
   {{ .Values.domain | replace "." "-" }}
 {{- end -}}
 
-{{- define "hostkraken.Plugins -}}
+{{- define "hostkraken.Plugins" -}}
   {{ splitList "," .Values.plugins }}
 {{- end -}}
 
