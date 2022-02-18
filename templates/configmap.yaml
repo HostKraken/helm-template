@@ -1,4 +1,3 @@
-{{- $plugins := include "hostkraken.Plugins" . -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -69,7 +68,7 @@ data:
     /usr/bin/wp-cli plugin deactivate hello --path=/usr/html
     /usr/bin/wp-cli plugin uninstall hello --path=/usr/html
     fi
-    {{- range $plugins }}
+    {{- range $.hostkraken.Plugins }}
     if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' ; then
     /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html || true    
     fi
