@@ -83,7 +83,7 @@ spec:
               command: 
               - pgrep
               - nginx
-            initialDelaySeconds: {{ add ( mul (len .Values.plugins) 10 ) 90 }}
+            initialDelaySeconds: {{ add ( mul (len .Values.plugins| splitList ",") 10 ) 90 }}
             periodSeconds: 5
             failureThreshold: 30
           readinessProbe:
