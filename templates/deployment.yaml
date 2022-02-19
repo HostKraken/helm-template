@@ -1,4 +1,5 @@
 {{- $Plugins := .Values.plugins | splitList "," -}}
+{{- $PluginsCount := len $Plugins -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -84,7 +85,7 @@ spec:
               command: 
               - pgrep
               - nginx
-            initialDelaySeconds: {{ add ( mul (len $Plugins) 10 ) 90 }}
+            initialDelaySeconds: {{ add ( mul $PluginsCount 10 ) 90 }}
             periodSeconds: 5
             failureThreshold: 30
           readinessProbe:
@@ -92,7 +93,7 @@ spec:
               command: 
               - pgrep
               - nginx
-            initialDelaySeconds: {{ add ( mul (len $Plugins) 10 ) 90 }}
+            initialDelaySeconds: {{ add ( mul $PluginsCount 10 ) 90 }}
             periodSeconds: 5
             failureThreshold: 30
           resources:
