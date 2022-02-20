@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  creationTimestamp: null
+  labels:
+    prometheus: k8s
+  name: {{ include "hostkraken.domainDashed" . }}-rule
+spec:
+  groups:
+  - name: {{ .Values.domain }}
+    rules:
+    - alert: content-check-failed-{{ .Values.domain }}
+      expr: vector(1)
+      labels:
+        severity: critical
+      summary: "{{ .Values.domain }} does not match the expected page content!"
+    - alert: target-down-{{ .Values.domain }}
+      expr: vector(1)    
+      labels:
+        severity: critical
+      summary: "{{ .Values.domain }} is down!"  
