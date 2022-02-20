@@ -14,9 +14,11 @@ spec:
       expr: vector(1)
       labels:
         severity: critical
-      summary: "{{ .Values.domain }} does not match the expected page content!"
+      annotations:
+        summary: "{{ .Values.domain }} does not match the expected page content!"
     - alert: target-down-{{ .Values.domain }}
       expr: vector(1)    
       labels:
         severity: critical
-      summary: "{{ .Values.domain }} is down!"  
+      annotations:
+        summary: "{{ .Values.domain }} is down!"  
