@@ -30,7 +30,13 @@ spec:
                 driver: "secrets-store.csi.k8s.io"
                 readOnly: true
                 volumeAttributes:
-                  secretProviderClass: "vault-s3-{{ include "hostkraken.domainDashed" . }}"                
+                  secretProviderClass: "vault-s3-{{ include "hostkraken.domainDashed" . }}"         
+            - name: dummy-do-secret
+              csi:
+                driver: "secrets-store.csi.k8s.io"
+                readOnly: true
+                volumeAttributes:
+                  secretProviderClass: "do-backup-secret"                            
           containers:
             - name: {{ include "hostkraken.domainDashed" . }}-dailybackup
               env:
@@ -66,6 +72,9 @@ spec:
                 - name: SITE_NAME
                   value: {{ .Values.domain }}
               volumeMounts:
+              - name: "dummy-do-secret"
+                mountPath: "/mnt/dookie"
+                readOnly: true
               - name: "s3-creds"
                 mountPath: "/mnt/secrets-store"
                 readOnly: true              
