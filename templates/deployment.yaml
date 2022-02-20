@@ -120,7 +120,7 @@ metadata:
     {{- include "hostkraken.labels_mysql" . | nindent 4 }}
 spec:
   revisionHistoryLimit: 1
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "hostkraken.selectorLabels_mysql" . | nindent 6 }}
