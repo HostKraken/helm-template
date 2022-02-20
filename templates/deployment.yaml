@@ -139,6 +139,12 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
+        - name: dummy-do-secret
+          csi:
+            driver: "secrets-store.csi.k8s.io"
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "do-backup-secret"         
         - name: {{ include "hostkraken.domainDashed" . }}-db-creds
           csi:
             driver: "secrets-store.csi.k8s.io"
@@ -161,6 +167,8 @@ spec:
             mountPath: /var/lib/mysql
           - name: config-volume
             mountPath: /configs
+          - name: "dummy-do-secret"
+            mountPath: "/mnt/dookie"            
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "docker.io/bitnami/mariadb:10.5.11-debian-10-r0"
