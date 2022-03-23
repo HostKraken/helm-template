@@ -22,11 +22,11 @@ securityContext: {}
 
 resources:
   limits:
-    memory: 256Mi
+    memory: 512Mi
     cpu: 1024m
   requests:
     cpu: 1024m
-    memory: 256Mi
+    memory: 512Mi
 mysqlresources:
   limits:
     cpu: 512m
