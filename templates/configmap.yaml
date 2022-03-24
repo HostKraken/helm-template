@@ -5,6 +5,8 @@ metadata:
   name: {{ include "hostkraken.domainDashed" . }}-configmap
   namespace: {{ include "hostkraken.domainDashed" . }}
 data:
+  00_pgsql.conf: |
+    extension=pgsql.so
   disable-updates.php: |
     // hide update notifications
     function remove_core_updates(){

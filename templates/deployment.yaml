@@ -52,6 +52,9 @@ spec:
             readOnly: true
           - name: config-volume
             mountPath: /configs
+          - name: config-volume
+            mountPath: /etc/php7/conf.d/00_pgsql.conf
+            subPath: 00_pgsql.conf
           - name: wp-root-{{ include "hostkraken.domainDashed" . }}
             mountPath: /usr/html
           - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
