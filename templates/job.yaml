@@ -21,7 +21,7 @@ spec:
               secretProviderClass: "register-secret"
       containers:
       - command:
-        - /bin/sh
+        - /bin/bash
         args:
         - /create-secret-containerized.sh 
         volumeMounts:
