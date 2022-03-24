@@ -49,14 +49,6 @@ data:
     mv postgresql-for-wordpress-wordpress4-compat/pg4wp /usr/html/wp-content;
     cp /usr/html/wp-content/pg4wp/db.php /usr/html/wp-content;
     sleep 1;
-    while true; do
-    mysql -h {{ include "hostkraken.domainDashed" . }}-mysql.{{ include "hostkraken.domainDashed" . }}.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME -e "select now();"
-    EC=$?
-    if [ $EC -eq 0 ]; then
-        break
-    fi
-    sleep 1
-    done
     if [[ -f /usr/html/database_migration ]]; then
       if [ "`echo /database/*.sql`" != "/database/*.sql" ]; then
           for sqlscript in $(ls /database/*.sql); do
