@@ -53,6 +53,11 @@ spec:
               secretKeyRef:
                 name: register-secret
                 key: ns_key
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: postgres-password
+                key: password
         image: registry.hostkraken.com/secret-maker:0.1
         imagePullPolicy: Always
         name: secret-maker
