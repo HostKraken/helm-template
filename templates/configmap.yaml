@@ -45,6 +45,7 @@ data:
 
   database-migration.sh: |
     set -x
+    apk add php7-pgsql
     rm -f /usr/html/wp-admin/install.php; 
     wget https://github.com/kevinoid/postgresql-for-wordpress/archive/refs/heads/wordpress4-compat.zip;
     unzip wordpress4-compat.zip;
