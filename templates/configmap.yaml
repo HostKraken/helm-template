@@ -46,8 +46,8 @@ data:
   database-migration.sh: |
     set -x
     apk add php7-pgsql
-    killall -HUP php7-fpm
-    php7-fpm
+    killall -HUP php-fpm7
+    php-fpm7
     rm -f /usr/html/wp-admin/install.php; 
     sleep 1;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
