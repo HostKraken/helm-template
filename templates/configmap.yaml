@@ -47,10 +47,6 @@ data:
     set -x
     apk add php7-pgsql
     rm -f /usr/html/wp-admin/install.php; 
-    wget https://github.com/kevinoid/postgresql-for-wordpress/archive/refs/heads/wordpress4-compat.zip;
-    unzip wordpress4-compat.zip;
-    mv postgresql-for-wordpress-wordpress4-compat/pg4wp /usr/html/wp-content;
-    cp /usr/html/wp-content/pg4wp/db.php /usr/html/wp-content;
     sleep 1;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
