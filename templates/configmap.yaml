@@ -7,6 +7,39 @@ metadata:
 data:
   00_pgsql.conf: |
     extension=pgsql
+  db-config.php: |-
+    <?php
+    /**
+    * Use HyperDB to just use the replica for frontend reads.
+    * Register the primary server to HyperDB
+    */
+    $wpdb->add_database( array(
+            'host'     => mysql-0.mysql-headless.mysql.svc,
+            'user'     => DB_USER,
+            'password' => DB_PASSWORD,
+            'name'     => DB_NAME,
+            'write'    => 1, // primary server takes write queries
+            'read'     => is_admin() ? 1 : 0, // ... but only takes read queries in the admin if the replica is available
+    ) );
+    /**
+    * Register replica database server if it's available in this environment
+    */
+            $wpdb->add_database(array(
+                    'host'     => mysql-1.mysql-headless.mysql.svc,
+                    'user'     => DB_USER,
+                    'password' => DB_PASSWORD,
+                    'name'     => DB_NAME,
+                    'write'    => 0, // replica doesn't take write queries
+                    'read'     => 1, // ... but it does take read queries
+            ));
+            $wpdb->add_database(array(
+                    'host'     => mysql-2.mysql-headless.mysql.svc,
+                    'user'     => DB_USER,
+                    'password' => DB_PASSWORD,
+                    'name'     => DB_NAME,
+                    'write'    => 0, // replica doesn't take write queries
+                    'read'     => 1, // ... but it does take read queries
+            ));
   disable-updates.php: |
     // hide update notifications
     function remove_core_updates(){
@@ -46,6 +79,9 @@ data:
   database-migration.sh: |
     set -x
     rm -f /usr/html/wp-admin/install.php; 
+    wget https://downloads.wordpress.org/plugin/hyperdb.1.8.zip;
+    unzip hyperdb.1.8.zip;
+    mv hyperdb/db.php /usr/html/wp-content;
     sleep 1;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
