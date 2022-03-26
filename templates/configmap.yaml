@@ -24,8 +24,9 @@ data:
     /**
     * Register replica database server if it's available in this environment
     */
+    $replica_svc=gethostbyname("mysql-secondary.mysql");
             $wpdb->add_database(array(
-                    'host'     => "mysql-secondary.mysql",
+                    'host'     => $replica_svc,
                     'user'     => DB_USER,
                     'password' => DB_PASSWORD,
                     'name'     => DB_NAME,
