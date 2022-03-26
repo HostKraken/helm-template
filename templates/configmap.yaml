@@ -76,6 +76,10 @@ data:
     unzip hyperdb.1.8.zip;
     mv hyperdb/db.php /usr/html/wp-content;
     sleep 1;
+    cp /configs/db-config.php /usr/html;
+    sed -i "s/DB_USER/$DATABASE_USER/g"" /usr/html/db-config.php;
+    sed -i "s/DB_PASSWORD/$DATABASE_PASS/g" /usr/html/db-config.php;
+    sed -i "s/DB_NAME/$DATABASE_NAME/g" /usr/html/db-config.php;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
     /usr/bin/wp-cli plugin deactivate hello --path=/usr/html
