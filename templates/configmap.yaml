@@ -77,6 +77,27 @@ data:
     mv hyperdb/db.php /usr/html/wp-content;
     sleep 1;
     cp /configs/db-config.php /usr/html;
+    # gross hacks for old sites
+    case $DATABASE_NAME in
+      *"db_"*)
+        echo "Database name matches formmat. Continuing.."
+        ;;
+      *)
+        echo "Database name does not match format. Fixing..."  
+        dbtemp=db_${DATABASE_NAME}
+        export $DATABASE_NAME=$dbtemp
+        ;;
+    esac           
+    case $DATABASE_USER in
+      *"user_"*)
+        echo "Database name matches format. Continuing.."
+        ;;
+      *)
+        echo "Database user does not match format. Fixing..."  
+        usertemp=user_${DATABASE_NAME}
+        export $DATABASE_USER=$usertemp
+        ;;
+    esac
     sed -i "s/DB_USER/$DATABASE_USER/g"" /usr/html/db-config.php;
     sed -i "s/DB_PASSWORD/$DATABASE_PASS/g" /usr/html/db-config.php;
     sed -i "s/DB_NAME/$DATABASE_NAME/g" /usr/html/db-config.php;
