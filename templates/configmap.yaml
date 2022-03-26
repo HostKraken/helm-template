@@ -82,7 +82,7 @@ data:
     wget https://downloads.wordpress.org/plugin/hyperdb.1.8.zip;
     unzip hyperdb.1.8.zip;
     mv hyperdb/db.php /usr/html/wp-content;
-    sed -i 's/$retval = mysqli_real_connect.*/$retval = mysqli_real_connect( $dbh, $db_host, $db_user, $db_password, null, \'\', $socket, $client_flags );/g' /usr/html/wp-content/db.php;
+    sed -i 's/$retval = mysqli_real_connect.*/$retval = mysqli_real_connect\( $dbh, $db_host, $db_user, $db_password, null, \'\', $socket, $client_flags \);/g' /usr/html/wp-content/db.php;
     sleep 1;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
