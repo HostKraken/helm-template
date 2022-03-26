@@ -85,7 +85,7 @@ data:
       *)
         echo "Database name does not match format. Fixing..."  
         dbtemp=db_${DATABASE_NAME}
-        export $DATABASE_NAME=$dbtemp
+        export DATABASE_NAME=$dbtemp
         ;;
     esac           
     case $DATABASE_USER in
@@ -95,7 +95,7 @@ data:
       *)
         echo "Database user does not match format. Fixing..."  
         usertemp=user_${DATABASE_NAME}
-        export $DATABASE_USER=$usertemp
+        export DATABASE_USER=$usertemp
         ;;
     esac
     sed -i "s/DB_USER/$DATABASE_USER/g"" /usr/html/db-config.php;
