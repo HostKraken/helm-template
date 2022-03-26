@@ -98,7 +98,7 @@ data:
         export DATABASE_USER=$usertemp
         ;;
     esac
-    sed -i "s/DB_USER/$DATABASE_USER/g"" /usr/html/db-config.php;
+    sed -i "s/DB_USER/$DATABASE_USER/g" /usr/html/db-config.php;
     sed -i "s/DB_PASSWORD/$DATABASE_PASS/g" /usr/html/db-config.php;
     sed -i "s/DB_NAME/$DATABASE_NAME/g" /usr/html/db-config.php;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
