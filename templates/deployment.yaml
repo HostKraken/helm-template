@@ -52,7 +52,6 @@ spec:
             readOnly: true
           - name: config-volume
             mountPath: /configs
-            subPath: db-config.php
           - name: wp-root-{{ include "hostkraken.domainDashed" . }}
             mountPath: /usr/html
           - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
