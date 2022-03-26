@@ -24,15 +24,24 @@ data:
     /**
     * Register replica database server if it's available in this environment
     */
-    $replica_svc=gethostbyname("mysql-secondary.mysql");
+    $replica0=gethostbyname("mysql-secondary-0.mysql-secondary.mysql");
+    $replica1=gethostbyname("mysql-secondary-1.mysql-secondary.mysql");
             $wpdb->add_database(array(
-                    'host'     => $replica_svc,
+                    'host'     => $replica0,
                     'user'     => DB_USER,
                     'password' => DB_PASSWORD,
                     'name'     => DB_NAME,
                     'write'    => 0, // replica doesn't take write queries
                     'read'     => 1, // ... but it does take read queries
             ));
+            $wpdb->add_database(array(
+                    'host'     => $replica1,
+                    'user'     => DB_USER,
+                    'password' => DB_PASSWORD,
+                    'name'     => DB_NAME,
+                    'write'    => 0, // replica doesn't take write queries
+                    'read'     => 1, // ... but it does take read queries
+            ));            
   disable-updates.php: |
     // hide update notifications
     function remove_core_updates(){
