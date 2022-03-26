@@ -25,7 +25,7 @@ data:
     * Register replica database server if it's available in this environment
     */
             $wpdb->add_database(array(
-                    'host'     => "mysql-secondary-0.mysql-secondary.mysql.svc.cluster.local",
+                    'host'     => "mysql-secondary-0.mysql-secondary.mysql",
                     'user'     => DB_USER,
                     'password' => DB_PASSWORD,
                     'name'     => DB_NAME,
@@ -33,7 +33,7 @@ data:
                     'read'     => 1, // ... but it does take read queries
             ));
             $wpdb->add_database(array(
-                    'host'     => "mysql-secondary-1.mysql-secondary.mysql.svc.cluster.local",
+                    'host'     => "mysql-secondary-1.mysql-secondary.mysql",
                     'user'     => DB_USER,
                     'password' => DB_PASSWORD,
                     'name'     => DB_NAME,
