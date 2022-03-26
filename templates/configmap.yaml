@@ -117,7 +117,7 @@ data:
     define( 'DB_NAME',     'DATABASE_NAME' );
     define( 'DB_USER',     'DATABASE_USER' );
     define( 'DB_PASSWORD', 'DATABASE_PASS' );
-    define( 'DB_HOST',     'mysql.mysql.svc' );
+    define( 'DB_HOST',     'mysql-primary-0.mysql-primary-headless.svc.mysql.cluster.local' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
     define('SITE_URL', "https://{{ .Values.site_url }}");
