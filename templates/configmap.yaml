@@ -94,7 +94,7 @@ data:
         ;;
       *)
         echo "Database user does not match format. Fixing..."  
-        usertemp=user_${DATABASE_NAME}
+        usertemp=user_${DATABASE_USER}
         export DATABASE_USER=$usertemp
         ;;
     esac
