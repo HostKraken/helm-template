@@ -14,7 +14,7 @@ data:
     * Register the primary server to HyperDB
     */
     $wpdb->add_database( array(
-            'host'     => "mysql-primary-0.mysql-primary-headless.svc.mysql.cluster.local",
+            'host'     => "mysql-primary-0.mysql-primary-headless.mysql",
             'user'     => DB_USER,
             'password' => DB_PASSWORD,
             'name'     => DB_NAME,
@@ -25,7 +25,7 @@ data:
     * Register replica database server if it's available in this environment
     */
             $wpdb->add_database(array(
-                    'host'     => "mysql-secondary-0.mysql-secondary-headlesss.svc.mysql.cluster.local",
+                    'host'     => "mysql-secondary-0.mysql-secondary-headless.mysql",
                     'user'     => DB_USER,
                     'password' => DB_PASSWORD,
                     'name'     => DB_NAME,
@@ -33,7 +33,7 @@ data:
                     'read'     => 1, // ... but it does take read queries
             ));
             $wpdb->add_database(array(
-                    'host'     => "mysql-secondary-1.mysql-secondary-headless.svc.mysql.cluster.local",
+                    'host'     => "mysql-secondary-1.mysql-secondary-headless.mysql",
                     'user'     => DB_USER,
                     'password' => DB_PASSWORD,
                     'name'     => DB_NAME,
@@ -117,7 +117,7 @@ data:
     define( 'DB_NAME',     'DATABASE_NAME' );
     define( 'DB_USER',     'DATABASE_USER' );
     define( 'DB_PASSWORD', 'DATABASE_PASS' );
-    define( 'DB_HOST',     'mysql-primary-0.mysql-primary-headless.svc.mysql.cluster.local' );
+    define( 'DB_HOST',     'mysql-primary-0.mysql-primary-headless.mysql' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
     define('SITE_URL', "https://{{ .Values.site_url }}");
