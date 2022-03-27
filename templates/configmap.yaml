@@ -134,7 +134,7 @@ data:
     sed -i "s/DB_PASSWORD/$DATABASE_PASS/g" /usr/html/db-config.php;
     sed -i "s/DB_NAME/$DATABASE_NAME/g" /usr/html/db-config.php;
     sed -i "s/ADATABASE_USER/$DATABASE_USER/g" /usr/html/wp-config.php;
-    sed -i "s/ADATABASE_PASSWORD/$DATABASE_PASS/g" /usr/html/wp-config.php;
+    sed -i "s/ADATABASE_PASS/$DATABASE_PASS/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
