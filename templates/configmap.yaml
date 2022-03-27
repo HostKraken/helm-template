@@ -14,52 +14,32 @@ data:
     * Register the primary server to HyperDB
     */
     $wpdb->add_database( array(
-            'host'     => "mysql-primary.mysql",
+            'host'     => "mysql-galera-mariadb-galera-0.mysql-galera-mariadb-galera-headless.mysql",
             'user'     => "DB_USER",
             'password' => "DB_PASSWORD",
             'name'     => "DB_NAME",
-            'write'    => 1, // primary server takes write queries
+            'write'    => 1, 
             'read'     => 1,
-           /* 'read'     => is_admin() ? 1 : 0, // ... but only takes read queries in the admin if the replica is available */
     ));
     /**
     * Register replica database server if it's available in this environment
     */
-    /*
             $wpdb->add_database(array(
-                    'host'     => "mysql-secondary-0.mysql-secondary.mysql",
+                    'host'     => "mysql-galera-mariadb-galera-1.mysql-galera-mariadb-galera-headless.mysql",
                     'user'     => "DB_USER",
                     'password' => "DB_PASSWORD",
                     'name'     => "DB_NAME",
-                    'write'    => 0, // replica doesn't take write queries
-                    'read'     => 1, // ... but it does take read queries
+                    'write'    => 1, 
+                    'read'     => 1, 
             ));
             
             $wpdb->add_database(array(
-                    'host'     => "mysql-secondary-1.mysql-secondary.mysql",
+                    'host'     => "mysql-galera-mariadb-galera-2.mysql-galera-mariadb-galera-headless.mysql",
                     'user'     => "DB_USER",
                     'password' => "DB_PASSWORD",
                     'name'     => "DB_NAME",
-                    'write'    => 0, // replica doesn't take write queries
-                    'read'     => 1, // ... but it does take read queries
-            ));
-            $wpdb->add_database(array(
-                    'host'     => "mysql-secondary-2.mysql-secondary.mysql",
-                    'user'     => "DB_USER",
-                    'password' => "DB_PASSWORD",
-                    'name'     => "DB_NAME",
-                    'write'    => 0, // replica doesn't take write queries
-                    'read'     => 1, // ... but it does take read queries
-            ));
-            $wpdb->add_database(array(
-                    'host'     => "mysql-secondary-3.mysql-secondary.mysql",
-                    'user'     => "DB_USER",
-                    'password' => "DB_PASSWORD",
-                    'name'     => "DB_NAME",
-                    'write'    => 0, // replica doesn't take write queries
-                    'read'     => 1, // ... but it does take read queries
-            ));
-                     */                     
+                    'write'    => 1, 
+                    'read'     => 1, 
           
   disable-updates.php: |
     // hide update notifications
