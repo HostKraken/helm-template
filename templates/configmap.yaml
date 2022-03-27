@@ -100,6 +100,8 @@ data:
   database-migration.sh: |
     set -x
     rm -f /usr/html/wp-admin/install.php; 
+    cp /configs/wp-config.php /usr/html;
+    chown nginx: /usr/html/wp-config.php;
     wget https://downloads.wordpress.org/plugin/hyperdb.1.8.zip;
     unzip hyperdb.1.8.zip;
     mv hyperdb/db.php /usr/html/wp-content;
@@ -131,6 +133,9 @@ data:
     sed -i "s/DB_USER/$DATABASE_USER/g" /usr/html/db-config.php;
     sed -i "s/DB_PASSWORD/$DATABASE_PASS/g" /usr/html/db-config.php;
     sed -i "s/DB_NAME/$DATABASE_NAME/g" /usr/html/db-config.php;
+    sed -i "s/ADATABASE_USER/$DATABASE_USER/g" /usr/html/wp-config.php;
+    sed -i "s/ADATABASE_PASSWORD/$DATABASE_PASS/g" /usr/html/wp-config.php;
+    sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
     /usr/bin/wp-cli plugin deactivate hello --path=/usr/html
@@ -162,9 +167,9 @@ data:
   wp-config.php: |
     <?php 
     /* MySQL settings */
-    define( 'DB_NAME',     'DATABASE_NAME' );
-    define( 'DB_USER',     'DATABASE_USER' );
-    define( 'DB_PASSWORD', 'DATABASE_PASS' );
+    define( 'DB_NAME',     'ADATABASE_NAME' );
+    define( 'DB_USER',     'ADATABASE_USER' );
+    define( 'DB_PASSWORD', 'ADATABASE_PASS' );
     define( 'DB_HOST',     'mysql-primary.mysql' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
