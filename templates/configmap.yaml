@@ -109,7 +109,7 @@ data:
         ;;
       *)
         echo "Database name does not match format. Fixing..."  
-        dbtemp1=`echo $DATABASE_NAME|head -c25`
+        dbtemp1=`echo $DATABASE_NAME`
         dbtemp=db_${dbtemp1}
         export DATABASE_NAME=$dbtemp
         ;;
