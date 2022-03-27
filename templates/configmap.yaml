@@ -109,7 +109,8 @@ data:
         ;;
       *)
         echo "Database name does not match format. Fixing..."  
-        dbtemp=db_${DATABASE_NAME}
+        dbtemp1=`echo $DATABASE_NAME|head -c25`
+        dbtemp=db_${dbtemp1}
         export DATABASE_NAME=$dbtemp
         ;;
     esac           
@@ -119,7 +120,8 @@ data:
         ;;
       *)
         echo "Database user does not match format. Fixing..."  
-        usertemp=user_${DATABASE_USER}
+        usertemp1=`echo $DATABASE_USER|head -c25`
+        usertemp=user_${usertemp1}
         export DATABASE_USER=$usertemp
         ;;
     esac
