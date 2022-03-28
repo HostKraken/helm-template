@@ -81,6 +81,9 @@ data:
   database-migration.sh: |
     set -x
     rm -f /usr/html/wp-admin/install.php; 
+    sed -i 's/;opcache/opcache/g' /etc/php7/php.ini;
+    killall -HUP php-fpm7
+    php-fpm7
     cp /configs/wp-config.php /usr/html;
     chown nginx: /usr/html/wp-config.php;
     wget https://downloads.wordpress.org/plugin/hyperdb.1.8.zip;
