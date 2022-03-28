@@ -5,6 +5,9 @@ metadata:
   name: {{ include "hostkraken.domainDashed" . }}-configmap
   namespace: {{ include "hostkraken.domainDashed" . }}
 data:
+  blacklist.ini: |
+    /usr/html/wp-content/plugins/woo-*
+    /usr/html/wp-content/plugins/woocommerc*
   00_pgsql.conf: |
     extension=pgsql
   db-config.php: |-
@@ -81,7 +84,10 @@ data:
   database-migration.sh: |
     set -x
     rm -f /usr/html/wp-admin/install.php; 
+    cp /configs/blacklist.ini /etc/php7/blacklist.ini;
     sed -i 's/;opcache/opcache/g' /etc/php7/php.ini;
+    sed -i 's/opcache.blacklist_filename=/opcache.blacklist_filename=\/etc\/php7\/blacklist.ini/g' /etc/php7/php.ini;
+    echo ""
     killall -HUP php-fpm7
     php-fpm7
     cp /configs/wp-config.php /usr/html;
