@@ -5,6 +5,43 @@ metadata:
   name: {{ include "hostkraken.domainDashed" . }}-configmap
   namespace: {{ include "hostkraken.domainDashed" . }}
 data:
+  00_pgsql.conf: |
+    extension=pgsql
+  db-config.php: |-
+    <?php
+    /**
+    * Use HyperDB to just use the replica for frontend reads.
+    * Register the primary server to HyperDB
+    */
+    $wpdb->add_database( array(
+            'host'     => "mysql-galera-mariadb-galera-0.mysql-galera-mariadb-galera-headless.mysql",
+            'user'     => "DB_USER",
+            'password' => "DB_PASSWORD",
+            'name'     => "DB_NAME",
+            'write'    => 1, 
+            'read'     => 1,
+    ));
+    /**
+    * Register replica database server if it's available in this environment
+    */
+            $wpdb->add_database(array(
+                    'host'     => "mysql-galera-mariadb-galera-1.mysql-galera-mariadb-galera-headless.mysql",
+                    'user'     => "DB_USER",
+                    'password' => "DB_PASSWORD",
+                    'name'     => "DB_NAME",
+                    'write'    => 1, 
+                    'read'     => 1, 
+            ));
+            
+            $wpdb->add_database(array(
+                    'host'     => "mysql-galera-mariadb-galera-2.mysql-galera-mariadb-galera-headless.mysql",
+                    'user'     => "DB_USER",
+                    'password' => "DB_PASSWORD",
+                    'name'     => "DB_NAME",
+                    'write'    => 1, 
+                    'read'     => 1, 
+                    ));
+          
   disable-updates.php: |
     // hide update notifications
     function remove_core_updates(){
@@ -44,26 +81,42 @@ data:
   database-migration.sh: |
     set -x
     rm -f /usr/html/wp-admin/install.php; 
+    cp /configs/wp-config.php /usr/html;
+    chown nginx: /usr/html/wp-config.php;
+    wget https://downloads.wordpress.org/plugin/hyperdb.1.8.zip;
+    unzip hyperdb.1.8.zip;
+    mv hyperdb/db.php /usr/html/wp-content;
     sleep 1;
-    while true; do
-    mysql -h {{ include "hostkraken.domainDashed" . }}-mysql.{{ include "hostkraken.domainDashed" . }}.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME -e "select now();"
-    EC=$?
-    if [ $EC -eq 0 ]; then
-        break
-    fi
-    sleep 1
-    done
-    if [[ -f /usr/html/database_migration ]]; then
-      if [ "`echo /database/*.sql`" != "/database/*.sql" ]; then
-          for sqlscript in $(ls /database/*.sql); do
-              mysql -h {{ include "hostkraken.domainDashed" . }}-mysql.{{ include "hostkraken.domainDashed" . }}.svc -u$DATABASE_USER -p$DATABASE_PASS $DATABASE_NAME <$sqlscript
-          done
-          rm /usr/html/database_migration
-      fi
-      unset DATABASE_USER
-      unset DATABASE_PASS
-      unset DATABASE_NAME
-    fi
+    cp /configs/db-config.php /usr/html;
+    # gross hacks for old sites
+    case $DATABASE_NAME in
+      *"db_"*)
+        echo "Database name matches formmat. Continuing.."
+        ;;
+      *)
+        echo "Database name does not match format. Fixing..."  
+        dbtemp1=`echo $DATABASE_NAME`
+        dbtemp=db_${dbtemp1}
+        export DATABASE_NAME=$dbtemp
+        ;;
+    esac           
+    case $DATABASE_USER in
+      *"user_"*)
+        echo "Database name matches format. Continuing.."
+        ;;
+      *)
+        echo "Database user does not match format. Fixing..."  
+        usertemp1=`echo $DATABASE_USER|head -c25`
+        usertemp=user_${usertemp1}
+        export DATABASE_USER=$usertemp
+        ;;
+    esac
+    sed -i "s/DB_USER/$DATABASE_USER/g" /usr/html/db-config.php;
+    sed -i "s/DB_PASSWORD/$DATABASE_PASS/g" /usr/html/db-config.php;
+    sed -i "s/DB_NAME/$DATABASE_NAME/g" /usr/html/db-config.php;
+    sed -i "s/ADATABASE_USER/$DATABASE_USER/g" /usr/html/wp-config.php;
+    sed -i "s/ADATABASE_PASS/$DATABASE_PASS/g" /usr/html/wp-config.php;
+    sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
     /usr/bin/wp-cli plugin deactivate hello --path=/usr/html
@@ -77,6 +130,8 @@ data:
     /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html || true
     fi
     {{- end }}
+    export divi_url=`aws s3 presign s3://krakenwpassets/Divi.zip`
+    /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url"
     /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
     /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php`
@@ -95,10 +150,10 @@ data:
   wp-config.php: |
     <?php 
     /* MySQL settings */
-    define( 'DB_NAME',     'DATABASE_NAME' );
-    define( 'DB_USER',     'DATABASE_USER' );
-    define( 'DB_PASSWORD', 'DATABASE_PASS' );
-    define( 'DB_HOST',     '{{ include "hostkraken.domainDashed" . }}-mysql.{{ include "hostkraken.domainDashed" . }}.svc' );
+    define( 'DB_NAME',     'ADATABASE_NAME' );
+    define( 'DB_USER',     'ADATABASE_USER' );
+    define( 'DB_PASSWORD', 'ADATABASE_PASS' );
+    define( 'DB_HOST',     'mysql-galera-mariadb-galera-0.mysql-galera-mariadb-galera-headless.mysql' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
     define('SITE_URL', "https://{{ .Values.site_url }}");

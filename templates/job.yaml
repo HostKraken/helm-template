@@ -21,7 +21,7 @@ spec:
               secretProviderClass: "register-secret"
       containers:
       - command:
-        - /bin/sh
+        - /bin/bash
         args:
         - /create-secret-containerized.sh 
         volumeMounts:
@@ -53,6 +53,11 @@ spec:
               secretKeyRef:
                 name: register-secret
                 key: ns_key
+        - name: MYSQL_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: register-secret
+                key: mysql_password
         image: registry.hostkraken.com/secret-maker:0.1
         imagePullPolicy: Always
         name: secret-maker
