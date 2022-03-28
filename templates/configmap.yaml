@@ -152,7 +152,7 @@ data:
     define( 'DB_NAME',     'ADATABASE_NAME' );
     define( 'DB_USER',     'ADATABASE_USER' );
     define( 'DB_PASSWORD', 'ADATABASE_PASS' );
-    define( 'DB_HOST',     'mysql-primary.mysql' );
+    define( 'DB_HOST',     'mysql-galera-mariadb-galera.mysql' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
     define('SITE_URL', "https://{{ .Values.site_url }}");
