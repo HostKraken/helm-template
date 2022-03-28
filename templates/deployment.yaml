@@ -61,6 +61,16 @@ spec:
           image: "registry.hostkraken.com/{{ .Values.domain }}:latest"
           imagePullPolicy: Always
           env:
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: divi-bucket-secret
+                key: AWS_ACCESS_KEY_ID
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: divi-bucket-secret
+                key: AWS_SECRET_ACCESS_KEY
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
