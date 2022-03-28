@@ -35,6 +35,12 @@ spec:
             readOnly: true
             volumeAttributes:
               secretProviderClass: "vault-db-{{ include "hostkraken.domainDashed" . }}"
+        - name: divi-creds
+          csi:
+            driver: "secrets-store.csi.k8s.io"
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: divi-bucket-secret             
         - name: config-volume
           configMap:
             name: {{ include "hostkraken.domainDashed" . }}-configmap
@@ -47,6 +53,9 @@ spec:
       containers:
         - name: {{ include "hostkraken.domainDashed" . }}
           volumeMounts:
+          - name: "divi-creds"
+            mountPath: "/mnt/divi-secret"
+            readOnly: true
           - name: "db-creds"
             mountPath: "/mnt/secrets-store"
             readOnly: true
