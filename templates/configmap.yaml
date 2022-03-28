@@ -122,6 +122,7 @@ data:
 
   database-migration.sh: |
     set -x
+    apk add aws-cli
     rm -f /usr/html/wp-admin/install.php; 
     cp /configs/php-fpm.conf /etc/php7/php-fpm.conf;
     cp /configs/blacklist.ini /etc/php7/blacklist.ini;
