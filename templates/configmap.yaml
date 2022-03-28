@@ -8,6 +8,7 @@ data:
   blacklist.ini: |
     /usr/html/wp-content/plugins/woo-*
     /usr/html/wp-content/plugins/woocommerc*
+    /usr/html/wp-admin/*
   00_pgsql.conf: |
     extension=pgsql
   db-config.php: |-
