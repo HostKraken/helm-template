@@ -47,9 +47,6 @@ spec:
         - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
             claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}
-        - name: wp-root-{{ include "hostkraken.domainDashed" . }}
-          persistentVolumeClaim:
-            claimName: wp-root-{{ include "hostkraken.domainDashed" . }}
       containers:
         - name: {{ include "hostkraken.domainDashed" . }}
           volumeMounts:
@@ -61,8 +58,6 @@ spec:
             readOnly: true
           - name: config-volume
             mountPath: /configs
-          - name: wp-root-{{ include "hostkraken.domainDashed" . }}
-            mountPath: /usr/html
           - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
             mountPath: /usr/html/wp-content/uploads
           securityContext:
