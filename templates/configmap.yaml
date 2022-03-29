@@ -15,12 +15,12 @@ data:
     listen = /var/run/php7-fpm.sock
     listen.owner = nginx
     listen.group = nginx
-    pm = ondemand
+    pm = static
 
     ; Total RAM dedicated to the web server / Max child process size
-    pm.max_children = 75
+    pm.max_children = 8
 
-    pm.process_idle_timeout = 10s
+    pm.process_idle_timeout = 3600s
     pm.max_requests = 10000
     chdir = /usr/html
     php_flag[display_errors] = off
