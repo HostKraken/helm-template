@@ -46,10 +46,7 @@ spec:
               secretProviderClass: divi-bucket-secret             
         - name: config-volume
           configMap:
-            name: {{ include "hostkraken.domainDashed" . }}-configmap
-        - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
-          persistentVolumeClaim:
-            claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}         
+            name: {{ include "hostkraken.domainDashed" . }}-configmap      
         - name: wp-uploads-ceph-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
             claimName: wp-uploads-ceph-{{ include "hostkraken.domainDashed" . }}                  
@@ -66,10 +63,8 @@ spec:
             readOnly: true
           - name: config-volume
             mountPath: /configs
-          - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
-            mountPath: /usr/html/wp-content/uploads
           - name: wp-uploads-ceph-{{ include "hostkraken.domainDashed" . }}
-            mountPath: /tmp/ceph-uploads          
+            mountPath: /usr/html/wp-content/uploads       
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "registry.hostkraken.com/{{ .Values.domain }}:latest"
