@@ -17,7 +17,7 @@ data:
     listen.group = nginx
     pm = static
     php_admin_value[session.save_handler] = memcached
-    php_admin_value[session.save_path]="memcached.memcached.svc.cluster.local:11211"
+    php_admin_value[session.save_path]="127.0.0.1:11211"
     ; Total RAM dedicated to the web server / Max child process size
     pm.max_children = 8
 
@@ -126,7 +126,7 @@ data:
   database-migration.sh: |
     set -x
     sed -i 's/.*session.save_handler.*/session.save_handler = "memcached"/g' /etc/php7/php.ini
-    sed -i 's/.*session.save_path.*/session.save_path = "memcached.memcached.svc.cluster.local:11211"/g' /etc/php7/php.ini
+    sed -i 's/.*session.save_path.*/session.save_path = "127.0.0.1:11211"/g' /etc/php7/php.ini
     mkdir -p /tmp/sessions
     chown nginx: /tmp/sessions
     rm -f /usr/html/wp-admin/install.php; 
