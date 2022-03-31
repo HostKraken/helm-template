@@ -125,8 +125,8 @@ data:
 
   database-migration.sh: |
     set -x
-    sed -i 's/.*session.save_handler.*/session.save_handler = "memcached"/g' /etc/php7.php.ini
-    sed -i 's/.*session.save_path.*/session.save_path = "memcached.memcached.svc.cluster.local:11211"/g' /etc/php7.php.ini
+    sed -i 's/.*session.save_handler.*/session.save_handler = "memcached"/g' /etc/php7/php.ini
+    sed -i 's/.*session.save_path.*/session.save_path = "memcached.memcached.svc.cluster.local:11211"/g' /etc/php7/php.ini
     mkdir -p /tmp/sessions
     chown nginx: /tmp/sessions
     rm -f /usr/html/wp-admin/install.php; 
