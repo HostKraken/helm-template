@@ -85,13 +85,7 @@ spec:
             runAsNonRoot: true
             runAsUser: 1001
           terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-          - mountPath: /tmp
-            name: tmp
-          - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-            name: kube-api-access-cmgt9
-            readOnly: true          
+          terminationMessagePolicy: File    
         - name: {{ include "hostkraken.domainDashed" . }}    
           volumeMounts:
           - name: "data"
