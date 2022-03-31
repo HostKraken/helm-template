@@ -16,7 +16,8 @@ data:
     listen.owner = nginx
     listen.group = nginx
     pm = static
-    php_admin_value[session.save_path] = /tmp/sessions
+    php_admin_value[session.save_handler] = memcached
+    php_admin_value[session.save_path="memcached.memcached.svc.cluster.local:11211"]
     ; Total RAM dedicated to the web server / Max child process size
     pm.max_children = 8
 
