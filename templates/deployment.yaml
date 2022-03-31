@@ -31,7 +31,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: php-session-data  
+            claimName: php-session-data-{{ include "hostkraken.domainDashed" . }}
         - name: db-creds
           csi:
             driver: "secrets-store.csi.k8s.io"
