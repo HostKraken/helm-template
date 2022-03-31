@@ -123,7 +123,6 @@ data:
   database-migration.sh: |
     set -x
     mkdir -p /tmp/sessions
-    mount /dev/xvda /tmp/sessions
     chown nginx: /tmp/sessions
     rm -f /usr/html/wp-admin/install.php; 
     cp /configs/php-fpm.conf /etc/php7/php-fpm.conf;
