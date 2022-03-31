@@ -49,12 +49,12 @@ spec:
             name: {{ include "hostkraken.domainDashed" . }}-configmap
         - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
-            claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}
-      volumeDevices:
-        - name: data
-          devicePath: /dev/xvda            
+            claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}           
       containers:      
         - name: {{ include "hostkraken.domainDashed" . }}
+          volumeDevices:
+          - name: data
+            devicePath: /dev/xvda       
           volumeMounts:
           - name: "divi-creds"
             mountPath: "/mnt/divi-secret"
