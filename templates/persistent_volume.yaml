@@ -36,7 +36,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: rook-ceph-block
+  storageClassName: rook-ceph-raw
   resources:
     requests:
       storage: 1Gi
