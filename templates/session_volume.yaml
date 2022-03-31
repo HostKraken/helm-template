@@ -10,3 +10,16 @@ spec:
     requests:
       storage: 1Gi
   storageClassName: rook-cephfs
+  ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wp-uploads-ceph-{{ include "hostkraken.domainDashed" . }}
+  namespace: {{ include "hostkraken.domainDashed" . }}
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: rook-cephfs  
