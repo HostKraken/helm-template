@@ -47,6 +47,7 @@ data:
     /usr/html/wp-content/plugins/woo-*
     /usr/html/wp-content/plugins/woocommerc*
     /usr/html/wp-admin/*
+    /usr/html/wp-login.php
   00_pgsql.conf: |
     extension=pgsql
   db-config.php: |-
