@@ -16,8 +16,6 @@ data:
     listen.owner = nginx
     listen.group = nginx
     pm = static
-    php_admin_value[session.save_handler] = memcached
-    php_admin_value[session.save_path]="127.0.0.1:11211"
     ; Total RAM dedicated to the web server / Max child process size
     pm.max_children = 8
 
@@ -125,15 +123,8 @@ data:
 
   database-migration.sh: |
     set -x
-    sed -i 's/.*session.save_handler.*/session.save_handler = "memcached"/g' /etc/php7/php.ini
-    sed -i 's/.*session.save_path.*/session.save_path = "127.0.0.1:11211"/g' /etc/php7/php.ini
-    mkdir -p /tmp/sessions
-    chown nginx: /tmp/sessions
     rm -f /usr/html/wp-admin/install.php; 
     cp /configs/php-fpm.conf /etc/php7/php-fpm.conf;
-    cp /configs/blacklist.ini /etc/php7/blacklist.ini;
-    sed -i 's/;opcache/opcache/g' /etc/php7/php.ini;
-    sed -i 's/opcache.blacklist_filename=/opcache.blacklist_filename=\/etc\/php7\/blacklist.ini/g' /etc/php7/php.ini;
     echo ""
     killall -HUP php-fpm7
     php-fpm7
