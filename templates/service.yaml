@@ -7,7 +7,6 @@ metadata:
     {{- include "hostkraken.labels" . | nindent 4 }}
     approle: web
 spec:
-  sessionAffinity: ClientIP
   ports:
     - port: 80
       targetPort: http
