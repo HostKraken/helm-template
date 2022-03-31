@@ -29,6 +29,9 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: php-session-data  
         - name: db-creds
           csi:
             driver: "secrets-store.csi.k8s.io"
@@ -47,7 +50,10 @@ spec:
         - name: wp-uploads-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
             claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}
-      containers:
+      volumeDevices:
+        - name: data
+          devicePath: /dev/xvda            
+      containers:      
         - name: {{ include "hostkraken.domainDashed" . }}
           volumeMounts:
           - name: "divi-creds"
