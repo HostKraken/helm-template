@@ -15,7 +15,7 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt"
     external-dns.alpha.kubernetes.io/hostname: "{{ .Values.domain }},www.{{ .Values.domain }}"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
-        SecAction phase:1,nolog,pass,initcol:ip=%{REQUEST_HEADERS:CF-Connecting-IP},initcol:user=%{REQUEST_HEADERS:CF-Connecting-IP},id:5000134
+        "SecAction phase:1,nolog,pass,initcol:ip=%{REQUEST_HEADERS:CF-Connecting-IP},initcol:user=%{REQUEST_HEADERS:CF-Connecting-IP},id:5000134
         <Locationmatch "/wp-login.php">
         # Setup brute force detection.
         # React if block flag has been set.
@@ -24,7 +24,7 @@ metadata:
         SecRule RESPONSE_STATUS "^302" "phase:5,t:none,nolog,pass,setvar:ip.bf_counter=0,id:5000136"
         SecRule RESPONSE_STATUS "^200" "phase:5,chain,t:none,nolog,pass,setvar:ip.bf_counter=+1,deprecatevar:ip.bf_counter=1/180,id:5000137"
         SecRule ip:bf_counter "@gt 10" "t:none,setvar:user.bf_block=1,expirevar:user.bf_block=300,setvar:ip.bf_counter=0"
-        </locationmatch>
+        </locationmatch>"
 spec:
   tls:
     - hosts:
