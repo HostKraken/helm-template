@@ -51,11 +51,10 @@ spec:
           persistentVolumeClaim:
             claimName: wp-uploads-{{ include "hostkraken.domainDashed" . }}           
       containers:      
-        - name: {{ include "hostkraken.domainDashed" . }}
-          volumeDevices:
-          - name: data
-            devicePath: /dev/xvda       
+        - name: {{ include "hostkraken.domainDashed" . }}    
           volumeMounts:
+          - name: "data"
+            mountPath: "/tmp/sessions"
           - name: "divi-creds"
             mountPath: "/mnt/divi-secret"
             readOnly: true
