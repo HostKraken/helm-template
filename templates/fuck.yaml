@@ -32,7 +32,7 @@ spec:
           - name: "wp-uploads-{{ include "hostkraken.domainDashed" . }}"
             mountPath: "/uploads-rbd"
         env: []
-        image: eecams/rsync:latest
+        image: eeacms/rsync:latest
         imagePullPolicy: IfNotPresent
         name: uploads-migrate
         resources: {}
