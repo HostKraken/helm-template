@@ -25,7 +25,7 @@ data:
     pm.max_requests = 10000
     chdir = /usr/html
     php_flag[display_errors] = off
-    php_admin_value[opcache.enable] = 1
+    php_admin_value[opcache.enable] = 0
     php_admin_value[memory_limit] = 256M
     php_admin_value[upload_max_filesize] = 2048M
     php_admin_value[post_max_size] = 128M
