@@ -168,24 +168,24 @@ data:
     sed -i "s/ADATABASE_USER/$DATABASE_USER/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_PASS/$DATABASE_PASS/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
-    if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
-    /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
+    if ! /usr/bin/wp-cli core is-installed --path='/usr/html' --url="{{ $.Values.domain }}"; then
+    /usr/bin/wp-cli core install --path='/usr/html' --url="http://{{ $.Values.domain }}" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
     sleep 10;
-    /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="`echo {{ $.Release.Name }} | tr '-' '.' `"
-    /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="`echo {{ $.Release.Name }} | tr '-' '.' `"
+    /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="{{ $.Values.domain }}"
+    /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="{{ $.Values.domain }}"
     fi
     {{- range $Plugins }}
-    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="`echo {{ $.Release.Name }} | tr '-' '.' `" ; then
-    /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html --url="`echo {{ $.Release.Name }} | tr '-' '.' `"  || true    
+    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="{{ $.Values.domain }}" ; then
+    /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
     fi
     if ! /usr/bin/wp-cli plugin is-active {{ . }} --path='/usr/html' ; then
-    /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html --url="`echo {{ $.Release.Name }} | tr '-' '.' `" || true
+    /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}" || true
     fi
     {{- end }}
     export divi_url=`aws s3 presign s3://krakenwpassets/Divi.zip`
-    /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="`echo {{ $.Release.Name }} | tr '-' '.' `"
-    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="`echo {{ $.Release.Name }} | tr '-' '.' `"
-    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="`echo {{ $.Release.Name }} | tr '-' '.' `"
+    /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="{{ $.Values.domain }}"
+    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="{{ $.Values.domain }}"
+    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="{{ $.Values.domain }}"
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
       cat /configs/disable-updates.php >>/usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php
