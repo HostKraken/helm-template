@@ -171,21 +171,21 @@ data:
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
     /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
     sleep 10;
-    /usr/bin/wp-cli plugin deactivate hello --path=/usr/html
-    /usr/bin/wp-cli plugin uninstall hello --path=/usr/html
+    /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="`echo {{ .Release.Name }} | tr '-' '.' `"
+    /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="`echo {{ .Release.Name }} | tr '-' '.' `"
     fi
     {{- range $Plugins }}
-    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' ; then
-    /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html || true    
+    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" ; then
+    /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html --url="`echo {{ .Release.Name }} | tr '-' '.' `"  || true    
     fi
     if ! /usr/bin/wp-cli plugin is-active {{ . }} --path='/usr/html' ; then
-    /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html || true
+    /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html --url="`echo {{ .Release.Name }} | tr '-' '.' `" || true
     fi
     {{- end }}
     export divi_url=`aws s3 presign s3://krakenwpassets/Divi.zip`
-    /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url"
-    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
-    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html'
+    /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="`echo {{ .Release.Name }} | tr '-' '.' `"
+    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `"
+    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `"
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
       cat /configs/disable-updates.php >>/usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php
@@ -210,7 +210,7 @@ data:
     #define('FORCE_SSL_ADMIN', true);
     define('SITE_URL', "{{ .Values.domain }}");
     /* MySQL database table prefix. */
-    $table_prefix = '{{- .Values.table_prefix | default "wp_" -}}';
+    $table_prefix = '{{- .Values.table_prefix | default 'wp_' -}}';
     //Begin Really Simple SSL Load balancing fix
     if ((isset($_ENV["HTTPS"]) && ("on" == $_ENV["HTTPS"]))
     || (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "1") !== false))
