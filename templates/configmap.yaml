@@ -75,7 +75,7 @@ data:
                     'password' => "DB_PASSWORD",
                     'name'     => "DB_NAME",
                     'write'    => 0, 
-                    'read'     => 1, 
+                    'read'     => if( defined( 'WP_CLI' ) && WP_CLI ) ? 0 : 1, 
             ));
             
             $wpdb->add_database(array(
@@ -84,7 +84,7 @@ data:
                     'password' => "DB_PASSWORD",
                     'name'     => "DB_NAME",
                     'write'    => 0, 
-                    'read'     => 1, 
+                    'read'     => if( defined( 'WP_CLI' ) && WP_CLI ) ? 0 : 1, 
                     ));
           
   disable-updates.php: |
