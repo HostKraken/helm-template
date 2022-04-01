@@ -210,7 +210,7 @@ data:
     #define('FORCE_SSL_ADMIN', true);
     define('SITE_URL', "{{ .Values.domain }}");
     /* MySQL database table prefix. */
-    $table_prefix = '{{- .Values.table_prefix | default 'wp_' -}}';
+    $table_prefix = '{{- .Values.table_prefix | default "wp_" -}}';
     //Begin Really Simple SSL Load balancing fix
     if ((isset($_ENV["HTTPS"]) && ("on" == $_ENV["HTTPS"]))
     || (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "1") !== false))
