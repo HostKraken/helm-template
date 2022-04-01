@@ -207,6 +207,7 @@ data:
     define( 'DB_HOST',     'mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
+    define('SITE_URL', "{{ .Values.domain }}");
     /* MySQL database table prefix. */
     $table_prefix = '{{- .Values.table_prefix | default "wp_" -}}';
     //Begin Really Simple SSL Load balancing fix
