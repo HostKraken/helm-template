@@ -99,7 +99,7 @@ spec:
               command: 
               - pgrep
               - nginx
-            initialDelaySeconds: {{ add ( mul $PluginsCount 3 ) 60 }}
+            initialDelaySeconds: {{ add ( mul $PluginsCount 3 ) 70 }}
             periodSeconds: 5
             failureThreshold: 30
           readinessProbe:
@@ -107,7 +107,7 @@ spec:
               command: 
               - pgrep
               - nginx
-            initialDelaySeconds: {{ add ( mul $PluginsCount 3 ) 60 }}
+            initialDelaySeconds: {{ add ( mul $PluginsCount 3 ) 70 }}
             periodSeconds: 5
             failureThreshold: 30
           resources:
