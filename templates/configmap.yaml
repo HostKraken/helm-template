@@ -161,7 +161,6 @@ data:
         export DATABASE_USER=$usertemp
         ;;
     esac
-    export db_32chars=`echo $DATABASE_NAME|head -c32`
     export user_32chars=`echo $DATABASE_USER|head -c32`
     sed -i "s/DB_USER/$user_32chars/g" /usr/html/db-config.php;
     sed -i "s/DB_PASSWORD/$DATABASE_PASS/g" /usr/html/db-config.php;
