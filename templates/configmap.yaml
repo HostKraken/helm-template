@@ -169,7 +169,8 @@ data:
     sed -i "s/ADATABASE_PASS/$DATABASE_PASS/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
     export hosty=`hostname`
-    if [[ "$hosty" == "{{ $.Release.Name }}" ]]; then
+    export release="{{ $.Release.Name }}"
+    if [[ "$hosty" == "${release}-0" ]]; then
       /usr/bin/wp-cli core install --path='/usr/html' --url="{{ $.Values.domain }}" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
       sleep 10;
     else 
