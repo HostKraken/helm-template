@@ -169,13 +169,13 @@ data:
     sed -i "s/ADATABASE_PASS/$DATABASE_PASS/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
     if ! /usr/bin/wp-cli core is-installed --path='/usr/html'; then
-    /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
+    /usr/bin/wp-cli core install --path='/usr/html' --url="`echo {{ $Release.Name }} | tr '-' '.' `" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
     sleep 10;
     /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="`echo {{ .Release.Name }} | tr '-' '.' `"
     /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="`echo {{ .Release.Name }} | tr '-' '.' `"
     fi
     {{- range $Plugins }}
-    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="`echo {{ .Release.Name }} | tr '-' '.' `" ; then
+    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="`echo {{ $.Release.Name }} | tr '-' '.' `" ; then
     /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html --url="`echo {{ .Release.Name }} | tr '-' '.' `"  || true    
     fi
     if ! /usr/bin/wp-cli plugin is-active {{ . }} --path='/usr/html' ; then
