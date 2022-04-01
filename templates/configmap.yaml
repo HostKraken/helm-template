@@ -168,16 +168,18 @@ data:
     sed -i "s/ADATABASE_USER/$DATABASE_USER/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_PASS/$DATABASE_PASS/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
-    /usr/bin/wp-cli core install --path='/usr/html' --url="{{ $.Values.domain }}" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
-    sleep 10;
+    export hosty=`hostname`
+    if [[ "$hosty" == "{{ $.Release.Name }}" ]]; then
+      /usr/bin/wp-cli core install --path='/usr/html' --url="{{ $.Values.domain }}" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
+      sleep 10;
+    else 
+      echo "Not primary, not installing WP"
+    fi
     /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="{{ $.Values.domain }}"
     /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="{{ $.Values.domain }}"
     {{- range $Plugins }}
     if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="{{ $.Values.domain }}" ; then
-    /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
-    fi
-    if ! /usr/bin/wp-cli plugin is-active {{ . }} --url="{{ $.Values.domain }}" --path='/usr/html' ; then
-    /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}" || true
+    /usr/bin/wp-cli plugin install --activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
     fi
     {{- end }}
     export divi_url=`aws s3 presign s3://krakenwpassets/Divi.zip`
