@@ -8,7 +8,7 @@ metadata:
   labels:
     {{- include "hostkraken.labels" . | nindent 4 }}
 spec:
-  serviceName: "nginx"
+  serviceName: {{ include "hostkraken.domainDashed" . }}
   revisionHistoryLimit: 1
   replicas: {{ .Values.replicaCount }}
   selector:
