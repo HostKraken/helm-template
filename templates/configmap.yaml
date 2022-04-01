@@ -59,7 +59,7 @@ data:
     */
     $wpdb->persistent = true;
     $wpdb->add_database( array(
-            'host'     => "mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql",
+            'host'     => "mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local",
             'user'     => "DB_USER",
             'password' => "DB_PASSWORD",
             'name'     => "DB_NAME",
@@ -70,7 +70,7 @@ data:
     * Register replica database server if it's available in this environment
     */
             $wpdb->add_database(array(
-                    'host'     => "mysql-galera-local-mariadb-galera-1.mysql-galera-local-mariadb-galera-headless.mysql",
+                    'host'     => "mysql-galera-local-mariadb-galera-1.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local",
                     'user'     => "DB_USER",
                     'password' => "DB_PASSWORD",
                     'name'     => "DB_NAME",
@@ -79,7 +79,7 @@ data:
             ));
             
             $wpdb->add_database(array(
-                    'host'     => "mysql-galera-local-mariadb-galera-2.mysql-galera-local-mariadb-galera-headless.mysql",
+                    'host'     => "mysql-galera-local-mariadb-galera-2.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local",
                     'user'     => "DB_USER",
                     'password' => "DB_PASSWORD",
                     'name'     => "DB_NAME",
@@ -205,7 +205,7 @@ data:
     define( 'DB_NAME',     'ADATABASE_NAME' );
     define( 'DB_USER',     'ADATABASE_USER' );
     define( 'DB_PASSWORD', 'ADATABASE_PASS' );
-    define( 'DB_HOST',     'mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql' );
+    define( 'DB_HOST',     'mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local' );
     define( 'DB_CHARSET',  'utf8' );
     #define('FORCE_SSL_ADMIN', true);
     define('SITE_URL', "{{ .Values.domain }}");
