@@ -1,7 +1,7 @@
 {{- $Plugins := .Values.plugins | splitList "," -}}
 {{- $PluginsCount := len $Plugins -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "hostkraken.domainDashed" . }}
   namespace: {{ include "hostkraken.domainDashed" . }}
