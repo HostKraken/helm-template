@@ -178,7 +178,7 @@ data:
     if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="http://{{ $.Values.domain }}" ; then
     /usr/bin/wp-cli plugin install {{ . }} --path=/usr/html --url="http://{{ $.Values.domain }}"  || true    
     fi
-    if ! /usr/bin/wp-cli plugin is-active {{ . }} --path='/usr/html' ; then
+    if ! /usr/bin/wp-cli plugin is-active {{ . }} --url="http://{{ $.Values.domain }}" --path='/usr/html' ; then
     /usr/bin/wp-cli plugin activate {{ . }} --path=/usr/html --url="http://{{ $.Values.domain }}" || true
     fi
     {{- end }}
