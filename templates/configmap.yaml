@@ -126,7 +126,6 @@ data:
   database-migration.sh: |
     sed -i 's/.*session.save_handler.*/session.save_handler = "memcached"/g' /etc/php7/php.ini
     sed -i 's/.*session.save_path.*/session.save_path = "memcached.memcached.svc.cluster.local:11211"/g' /etc/php7/php.ini
-    set -x
     rm -f /usr/html/wp-admin/install.php; 
     cp /configs/php-fpm.conf /etc/php7/php-fpm.conf;
     echo ""
