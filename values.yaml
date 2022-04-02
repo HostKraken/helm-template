@@ -23,7 +23,7 @@ securityContext: {}
 resources:
   limits:
     memory: 768Mi
-    cpu: 2
+    cpu: 1
   requests:
     cpu: 768m
     memory: 768Mi
