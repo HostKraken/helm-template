@@ -23,7 +23,7 @@ data:
     pm.max_requests = 10000
     chdir = /usr/html
     php_flag[display_errors] = off
-    php_admin_value[opcache.enable] = 0
+    php_admin_value[opcache.enable] = 1
     php_admin_value[memory_limit] = 256M
     php_admin_value[upload_max_filesize] = 2048M
     php_admin_value[post_max_size] = 128M
@@ -124,6 +124,9 @@ data:
 
 
   database-migration.sh: |
+    cp /configs/blacklist.ini /etc/php7/blacklist.ini;
+    sed -i 's/;opcache/opcache/g' /etc/php7/php.ini;
+    sed -i 's/opcache.blacklist_filename=/opcache.blacklist_filename=\/etc\/php7\/blacklist.ini/g' /etc/php7/php.ini;
     sed -i 's/.*session.save_handler.*/session.save_handler = "memcached"/g' /etc/php7/php.ini
     sed -i 's/.*session.save_path.*/session.save_path = "memcached.memcached.svc.cluster.local:11211"/g' /etc/php7/php.ini
     rm -f /usr/html/wp-admin/install.php; 
