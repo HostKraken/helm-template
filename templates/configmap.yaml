@@ -166,10 +166,10 @@ data:
     ; Redirect worker stdout and stderr into main error log. If not set, stdout and
     ; stderr will be redirected to /dev/null according to FastCGI specs.
     ; Default Value: no
-    catch_workers_output = yes
-    emergency_restart_threshold = 10
-    emergency_restart_interval = 1m
-    process_control_timeout = 10s
+    php_admin_value[catch_workers_output] = yes
+    php_admin_value[emergency_restart_threshold] = 10
+    php_admin_value[emergency_restart_interval] = 1m
+    php_admin_value[process_control_timeout] = 10s
     ; Database variables passed via -e argument on Docker
     env["DB_HOST"] = "$DB_HOST"
     env["DB_USER"] = "$DB_USER"
