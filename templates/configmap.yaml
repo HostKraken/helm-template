@@ -252,7 +252,43 @@ data:
     }
     add_action( 'admin_menu', 'remove_plugin_install', 999 );
 
+  autoptimize-settings.sql: |
+    -- MariaDB dump 10.19  Distrib 10.4.22-MariaDB, for Linux (x86_64)
+    --
+    -- Host: mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local    Database: db_cc6a12f2074bb08ce1e46614095ed789
+    -- ------------------------------------------------------
+    -- Server version       10.6.7-MariaDB-log
 
+    /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+    /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+    /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+    /*!40101 SET NAMES utf8mb4 */;
+    /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+    /*!40103 SET TIME_ZONE='+00:00' */;
+    /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+    /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+    /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+    --
+    -- Dumping data for table `wp_options`
+    --
+    -- WHERE:  option_name like 'autoptimize%'
+
+    LOCK TABLES `wp_options` WRITE;
+    /*!40000 ALTER TABLE `wp_options` DISABLE KEYS */;
+    INSERT INTO `wp_options` VALUES (29399,'autoptimize_cache_clean','0','yes'),(29414,'autoptimize_cache_fallback','on','yes'),(29402,'autoptimize_cache_nogzip','on','yes'),(29206,'autoptimize_ccss_version','AO_2.9.5.1','yes'),(29396,'autoptimize_cdn_url','','yes'),(29369,'autoptimize_css','on','yes'),(29372,'autoptimize_css_aggregate','on','yes'),(29381,'autoptimize_css_datauris','','yes'),(29384,'autoptimize_css_defer','','yes'),(29387,'autoptimize_css_defer_inline','','yes'),(29375,'autoptimize_css_exclude','wp-content/cache/, wp-content/uploads/, admin-bar.min.css, dashicons.min.css','yes'),(29393,'autoptimize_css_include_inline','on','yes'),(29390,'autoptimize_css_inline','','yes'),(29378,'autoptimize_css_justhead','','yes'),(29417,'autoptimize_enable_meta_ao_settings','on','yes'),(29339,'autoptimize_enable_site_config','on','yes'),(29333,'autoptimize_html','on','yes'),(29336,'autoptimize_html_keepcomments','','yes'),(29297,'autoptimize_imgopt_launched','on','yes'),(29342,'autoptimize_js','on','yes'),(29345,'autoptimize_js_aggregate','on','yes'),(29351,'autoptimize_js_defer_inline','','yes'),(29348,'autoptimize_js_defer_not_aggregate','','yes'),(29354,'autoptimize_js_exclude','wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js, js/jquery/jquery.min.js','yes'),(29363,'autoptimize_js_forcehead','','yes'),(29366,'autoptimize_js_include_inline','on','yes'),(29360,'autoptimize_js_justhead','','yes'),(29357,'autoptimize_js_trycatch','','yes'),(29411,'autoptimize_minify_excluded','on','yes'),(29408,'autoptimize_optimize_checkout','on','yes'),(29405,'autoptimize_optimize_logged','on','yes'),(29251,'autoptimize_service_availablity','a:2:{s:12:\"extra_imgopt\";a:3:{s:6:\"status\";s:2:\"up\";s:5:\"hosts\";a:1:{i:1;s:28:\"https://sp-ao.shortpixel.ai/\";}s:16:\"launch-threshold\";s:4:\"4096\";}s:7:\"critcss\";a:2:{s:6:\"status\";s:2:\"up\";s:5:\"hosts\";a:1:{i:1;s:24:\"https://criticalcss.com/\";}}}','yes'),(29205,'autoptimize_version','2.9.5.1','yes');
+    /*!40000 ALTER TABLE `wp_options` ENABLE KEYS */;
+    UNLOCK TABLES;
+    /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+    /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+    /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+    /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+    /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+    /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+    /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+    -- Dump completed on 2022-04-03  4:05:03  
 
   database-migration.sh: |
     cp /configs/blacklist.ini /etc/php7/blacklist.ini;
@@ -311,6 +347,11 @@ data:
     /usr/bin/wp-cli plugin install --activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
     fi
     {{- end }}
+    /usr/bin/wp-cli plugin install --activate autoptimize --path=/usr/html --url="{{ $.Values.domain }}"  || true  
+    export options_table = "{{- .Values.table_prefix | default "wp_" -}}options"
+    cp /configs/autoptimize-settings.sql /tmp
+    sed -i "s/wp_options/$options_table/g" /configs/autoptimize-settings.sql
+    mysql -u$DATABASE_USER -p$DATABASE_PASS -h mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local $DATABASE_NAME </configs/autoptimize-settings.sql
     export divi_url=`aws s3 presign s3://krakenwpassets/Divi.zip`
     /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="{{ $.Values.domain }}"
     /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="{{ $.Values.domain }}"
