@@ -22,6 +22,16 @@ spec:
         {{- include "hostkraken.selectorLabels" . | nindent 8 }}
         approle: web
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - {{ include "hostkraken.domainDashed" . }}
+            topologyKey: kubernetes.io/hostname    
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
