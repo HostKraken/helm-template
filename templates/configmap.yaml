@@ -20,7 +20,7 @@ data:
     }
 
     http {
-    proxy_buffers 32 128k;
+    proxy_buffers 128 128k;
             keepalive_timeout  600s;
             keepalive_requests 10000;
     set_real_ip_from 10.0.0.0/8;
