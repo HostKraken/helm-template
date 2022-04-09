@@ -376,7 +376,7 @@ data:
       ;;
     *)
       echo "Theme does not contain a URL. Continuing."
-      /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme install --path='/usr/html' $theme --url="{{ $.Values.domain }}"
       /usr/bin/wp-cli theme install --activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
       /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
       ;;
