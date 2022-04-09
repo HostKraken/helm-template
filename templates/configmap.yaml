@@ -353,9 +353,20 @@ data:
     sed -i "s/wp_options/$options_table/g" /tmp/autoptimize-settings.sql
     mysql -u$DATABASE_USER -p$DATABASE_PASS -h mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local $DATABASE_NAME </tmp/autoptimize-settings.sql
     rm -f /tmp/autoptimize-settings.sql
-    export divi_url=`aws s3 presign s3://krakenwpassets/Divi.zip`
     export theme="{{ .Values.wp_theme|default "twentytwenty" }}"
     case $theme in
+    divi)
+      export theme=Divi
+      export themeurl=`aws s3 presign s3://krakenwpassets/Divi.zip`
+      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"  
+      ;;
+    Divi)
+      export theme=Divi
+      export themeurl=`aws s3 presign s3://krakenwpassets/Divi.zip`
+      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
+      ;;
     http*)
       echo "Theme is a URL. attempting to split it."
       export themeurl=$theme     
