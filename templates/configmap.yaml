@@ -358,15 +358,18 @@ data:
     case $theme in
     http*)
       echo "Theme is a URL. attempting to split it."
+      export themeurl=$theme     
       export theme=`echo $theme | grep -o "/[a-z0-9]*.zip"|tr -d '/'|sed 's/.zip//g'`
+      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"       
       ;;
     *)
       echo "Theme does not contain a URL. Continuing."
+      /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme install --activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
       ;;
     esac
-    /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="{{ $.Values.domain }}"
-    /usr/bin/wp-cli theme install --activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
-    /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
       cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
