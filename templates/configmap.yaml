@@ -353,13 +353,37 @@ data:
     sed -i "s/wp_options/$options_table/g" /tmp/autoptimize-settings.sql
     mysql -u$DATABASE_USER -p$DATABASE_PASS -h mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local $DATABASE_NAME </tmp/autoptimize-settings.sql
     rm -f /tmp/autoptimize-settings.sql
-    export divi_url=`aws s3 presign s3://krakenwpassets/Divi.zip`
-    /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="{{ $.Values.domain }}"
-    /usr/bin/wp-cli theme install --activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="{{ $.Values.domain }}"
-    /usr/bin/wp-cli theme activate {{ .Values.wp_theme|default "twentytwenty" }} --path='/usr/html' --url="{{ $.Values.domain }}"
-    export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php`
+    export theme="{{ .Values.wp_theme|default "twentytwenty" }}"
+    case $theme in
+    divi)
+      export theme=Divi
+      export themeurl=`aws s3 presign s3://krakenwpassets/Divi.zip`
+      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"  
+      ;;
+    Divi)
+      export theme=Divi
+      export themeurl=`aws s3 presign s3://krakenwpassets/Divi.zip`
+      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
+      ;;
+    http*)
+      echo "Theme is a URL. attempting to split it."
+      export themeurl=$theme     
+      export theme=`echo $theme | grep -o "/[a-z0-9]*.zip"|tr -d '/'|sed 's/.zip//g'`
+      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"       
+      ;;
+    *)
+      echo "Theme does not contain a URL. Continuing."
+      /usr/bin/wp-cli theme install --path='/usr/html' $theme --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme install --activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
+      ;;
+    esac
+    export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
-      cat /configs/disable-updates.php >>/usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php
+      cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
     fi
     rm -f /usr/html/wp-admin/plugin-editor.php
     rm -f /usr/html/wp-admin/plugin-install.php
