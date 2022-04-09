@@ -340,19 +340,6 @@ data:
     sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
       /usr/bin/wp-cli core install --path='/usr/html' --url="{{ $.Values.domain }}" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
       sleep 10;
-    /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="{{ $.Values.domain }}"
-    /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="{{ $.Values.domain }}"
-    {{- range $Plugins }}
-    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="{{ $.Values.domain }}" ; then
-    /usr/bin/wp-cli plugin install --activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
-    fi
-    {{- end }}
-    /usr/bin/wp-cli plugin install --activate autoptimize --path=/usr/html --url="{{ $.Values.domain }}"  || true  
-    export options_table="{{- .Values.table_prefix | default "wp_" -}}options"
-    cp /configs/autoptimize-settings.sql /tmp
-    sed -i "s/wp_options/$options_table/g" /tmp/autoptimize-settings.sql
-    mysql -u$DATABASE_USER -p$DATABASE_PASS -h mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local $DATABASE_NAME </tmp/autoptimize-settings.sql
-    rm -f /tmp/autoptimize-settings.sql
     export theme="{{ .Values.wp_theme|default "twentytwenty" }}"
     case $theme in
     divi)
@@ -382,6 +369,19 @@ data:
     sed -i "s/'force_activation'   => false,/'force_activation'   => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
     sed -i "s/'is_automatic' => false,/'is_automatic' => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
     /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
+    /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="{{ $.Values.domain }}"
+    /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="{{ $.Values.domain }}"
+    {{- range $Plugins }}
+    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="{{ $.Values.domain }}" ; then
+    /usr/bin/wp-cli plugin install --activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
+    fi
+    {{- end }}
+    /usr/bin/wp-cli plugin install --activate autoptimize --path=/usr/html --url="{{ $.Values.domain }}"  || true  
+    export options_table="{{- .Values.table_prefix | default "wp_" -}}options"
+    cp /configs/autoptimize-settings.sql /tmp
+    sed -i "s/wp_options/$options_table/g" /tmp/autoptimize-settings.sql
+    mysql -u$DATABASE_USER -p$DATABASE_PASS -h mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local $DATABASE_NAME </tmp/autoptimize-settings.sql
+    rm -f /tmp/autoptimize-settings.sql
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
       cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
