@@ -371,21 +371,17 @@ data:
       echo "Theme is a URL. attempting to split it."
       export themeurl=$theme     
       export theme=`echo $theme | grep -o "/[a-z0-9]*.zip"|tr -d '/'|sed 's/.zip//g'`
-      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
-      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"       
+      /usr/bin/wp-cli theme install $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
       ;;
     *)
       echo "Theme does not contain a URL. Continuing."
-      /usr/bin/wp-cli theme install --path='/usr/html' $theme --url="{{ $.Values.domain }}"
-      /usr/bin/wp-cli theme install --activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
-      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
+      /usr/bin/wp-cli theme install --path='/usr/html' $theme --url="{{ $.Values.domain }}"    
       ;;
     esac
     sed -i 's/public $is_automatic = false;/public $is_automatic = true;/g' /usr/html/wp-content/themes/$theme/includes/plugins/class-tgm-plugin-activation.php || true 
     sed -i "s/'force_activation'   => false,/'force_activation'   => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
     sed -i "s/'is_automatic' => false,/'is_automatic' => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
-    /usr/bin/wp-cli theme activate twentytwenty --path='/usr/html' --url="{{ $.Values.domain }}"
-    /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"   
+    /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
       cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
