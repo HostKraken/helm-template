@@ -390,7 +390,7 @@ data:
     rm -f /usr/html/wp-admin/plugin-install.php
     rm -f /usr/html/wp-admin/site-health.php
     rm -f /usr/html/wp-admin/site-health-info.php
-    rm -f /usr/html/wp-admin/import.php
+    #rm -f /usr/html/wp-admin/import.php
     rm -f /usr/html/wp-admin/theme-editor.php
     rm -f /usr/html/wp-admin/export.php
     sed -i 's/<a.*plugin-install.php.*\/a>//g' /usr/html/wp-admin/plugins.php
