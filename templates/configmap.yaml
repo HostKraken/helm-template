@@ -381,6 +381,7 @@ data:
       /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
       ;;
     esac
+    sed -i 's/public $is_automatic = false;/public $is_automatic = true;/g' /usr/html/wp-content/themes/$theme/includes/plugins/class-tgm-plugin-activation.php || true 
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
       cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
