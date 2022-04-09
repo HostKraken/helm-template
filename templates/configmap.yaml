@@ -382,6 +382,7 @@ data:
       ;;
     esac
     sed -i 's/public $is_automatic = false;/public $is_automatic = true;/g' /usr/html/wp-content/themes/$theme/includes/plugins/class-tgm-plugin-activation.php || true 
+    sed -i 's/\'force_activation\'   => false,/\'force_activation\'   => true,/g' /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
     export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
       cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
