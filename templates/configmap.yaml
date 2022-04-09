@@ -367,9 +367,9 @@ data:
     /usr/bin/wp-cli theme install --path='/usr/html' "$divi_url" --url="{{ $.Values.domain }}"
     /usr/bin/wp-cli theme install --activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
     /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
-    export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php`
+    export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
     if [[ "$disabledupdates" -eq 0 ]]; then
-      cat /configs/disable-updates.php >>/usr/html/wp-content/themes/{{ .Values.wp_theme|default "twentytwenty" }}/functions.php
+      cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
     fi
     rm -f /usr/html/wp-admin/plugin-editor.php
     rm -f /usr/html/wp-admin/plugin-install.php
