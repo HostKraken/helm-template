@@ -390,7 +390,7 @@ data:
       ;;
     esac    
     export themeinstalled=`wp-cli --path=/usr/html theme is-active $theme`
-    if [[ $themeinstalled -ne 0 ]]; then
+    if [[ $themeinstalled -ne 1 ]]; then
       if [[ $theme_is_url -eq 1 ]]; then
         /usr/bin/wp-cli theme install $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
         sed -i 's/public $is_automatic = false;/public $is_automatic = true;/g' /usr/html/wp-content/themes/$theme/includes/plugins/class-tgm-plugin-activation.php || true 
