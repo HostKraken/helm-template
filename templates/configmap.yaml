@@ -400,6 +400,7 @@ data:
       fi
       if [[ $theme_is_url -eq 0 ]]; then
         /usr/bin/wp-cli theme install --path='/usr/html' $theme --url="{{ $.Values.domain }}" 
+        /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"
       fi
     fi    
 
