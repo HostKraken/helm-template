@@ -340,8 +340,6 @@ data:
     sed -i "s/ADATABASE_USER/$DATABASE_USER/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_PASS/$DATABASE_PASS/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
-    export installed=`wp-cli core is-installed --path=/usr/html`
-    if [[ installed -ne 0 ]]; then
         /usr/bin/wp-cli core install --path='/usr/html' --url="{{ $.Values.domain }}" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
         sleep 10;     
       /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="{{ $.Values.domain }}"
@@ -369,7 +367,6 @@ data:
       rm -f /usr/html/wp-admin/theme-editor.php
       rm -f /usr/html/wp-admin/export.php
       sed -i 's/<a.*plugin-install.php.*\/a>//g' /usr/html/wp-admin/plugins.php
-    fi
     export theme="{{ .Values.wp_theme|default "twentytwenty" }}"
     case $theme in
     divi)
