@@ -340,62 +340,71 @@ data:
     sed -i "s/ADATABASE_USER/$DATABASE_USER/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_PASS/$DATABASE_PASS/g" /usr/html/wp-config.php;
     sed -i "s/ADATABASE_NAME/$DATABASE_NAME/g" /usr/html/wp-config.php;
-      /usr/bin/wp-cli core install --path='/usr/html' --url="{{ $.Values.domain }}" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
-      sleep 10;
+    export installed=`wp-cli core is-installed --path=/usr/html`
+    if [[ installed -ne 0 ]]; then
+        /usr/bin/wp-cli core install --path='/usr/html' --url="{{ $.Values.domain }}" --title='{{ .Values.site_title | default "New Deployment" }}' --admin_user='admin' --admin_email='roger@hostkraken.com' --admin_password='H0stKr4ken' || true
+        sleep 10;     
+      /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="{{ $.Values.domain }}"
+      /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="{{ $.Values.domain }}"
+      {{- range $Plugins }}
+      if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="{{ $.Values.domain }}" ; then
+      /usr/bin/wp-cli plugin install --activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
+      fi
+      {{- end }}
+      /usr/bin/wp-cli plugin install --activate autoptimize --path=/usr/html --url="{{ $.Values.domain }}"  || true  
+      export options_table="{{- .Values.table_prefix | default "wp_" -}}options"
+      cp /configs/autoptimize-settings.sql /tmp
+      sed -i "s/wp_options/$options_table/g" /tmp/autoptimize-settings.sql
+      mysql -u$DATABASE_USER -p$DATABASE_PASS -h mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local $DATABASE_NAME </tmp/autoptimize-settings.sql
+      rm -f /tmp/autoptimize-settings.sql
+      export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
+      if [[ "$disabledupdates" -eq 0 ]]; then
+        cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
+      fi
+      rm -f /usr/html/wp-admin/plugin-editor.php
+      rm -f /usr/html/wp-admin/plugin-install.php
+      rm -f /usr/html/wp-admin/site-health.php
+      rm -f /usr/html/wp-admin/site-health-info.php
+      #rm -f /usr/html/wp-admin/import.php
+      rm -f /usr/html/wp-admin/theme-editor.php
+      rm -f /usr/html/wp-admin/export.php
+      sed -i 's/<a.*plugin-install.php.*\/a>//g' /usr/html/wp-admin/plugins.php
+    fi
     export theme="{{ .Values.wp_theme|default "twentytwenty" }}"
     case $theme in
     divi)
       export theme=Divi
       export themeurl=`aws s3 presign s3://krakenwpassets/Divi.zip`
-      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
-      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"  
+      export theme_is_url=1
       ;;
     Divi)
       export theme=Divi
-      export themeurl=`aws s3 presign s3://krakenwpassets/Divi.zip`
-      /usr/bin/wp-cli theme install --activate $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
-      /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
+      export themeurl=`aws s3 presign s3://krakenwpassets/Divi.zip`  
+      export theme_is_url=1
       ;;
     http*)
       echo "Theme is a URL. attempting to split it."
+      export theme_is_url=1
       export themeurl=$theme     
       export theme=`echo $theme | grep -o "/[a-z0-9]*.zip"|tr -d '/'|sed 's/.zip//g'`
-      /usr/bin/wp-cli theme install $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
       ;;
     *)
-      echo "Theme does not contain a URL. Continuing."
-      /usr/bin/wp-cli theme install --path='/usr/html' $theme --url="{{ $.Values.domain }}"    
+      echo "Theme does not contain a URL. Continuing."  
       ;;
-    esac
-    sed -i 's/public $is_automatic = false;/public $is_automatic = true;/g' /usr/html/wp-content/themes/$theme/includes/plugins/class-tgm-plugin-activation.php || true 
-    sed -i "s/'force_activation'   => false,/'force_activation'   => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
-    sed -i "s/'is_automatic' => false,/'is_automatic' => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
-    /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}"      
-    /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="{{ $.Values.domain }}"
-    /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="{{ $.Values.domain }}"
-    {{- range $Plugins }}
-    if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="{{ $.Values.domain }}" ; then
-    /usr/bin/wp-cli plugin install --activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
-    fi
-    {{- end }}
-    /usr/bin/wp-cli plugin install --activate autoptimize --path=/usr/html --url="{{ $.Values.domain }}"  || true  
-    export options_table="{{- .Values.table_prefix | default "wp_" -}}options"
-    cp /configs/autoptimize-settings.sql /tmp
-    sed -i "s/wp_options/$options_table/g" /tmp/autoptimize-settings.sql
-    mysql -u$DATABASE_USER -p$DATABASE_PASS -h mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local $DATABASE_NAME </tmp/autoptimize-settings.sql
-    rm -f /tmp/autoptimize-settings.sql
-    export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
-    if [[ "$disabledupdates" -eq 0 ]]; then
-      cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
-    fi
-    rm -f /usr/html/wp-admin/plugin-editor.php
-    rm -f /usr/html/wp-admin/plugin-install.php
-    rm -f /usr/html/wp-admin/site-health.php
-    rm -f /usr/html/wp-admin/site-health-info.php
-    #rm -f /usr/html/wp-admin/import.php
-    rm -f /usr/html/wp-admin/theme-editor.php
-    rm -f /usr/html/wp-admin/export.php
-    sed -i 's/<a.*plugin-install.php.*\/a>//g' /usr/html/wp-admin/plugins.php
+    esac    
+    export themeinstalled=`wp-cli --path=/usr/html theme is-active $theme`
+    if [[ $themeinstalled -ne 0 ]]; then
+      if [[ $theme_is_url -eq 1 ]]; then
+        /usr/bin/wp-cli theme install $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
+        sed -i 's/public $is_automatic = false;/public $is_automatic = true;/g' /usr/html/wp-content/themes/$theme/includes/plugins/class-tgm-plugin-activation.php || true 
+        sed -i "s/'force_activation'   => false,/'force_activation'   => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
+        sed -i "s/'is_automatic' => false,/'is_automatic' => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
+        /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}" 
+      fi
+      if [[ $theme_is_url -eq 0 ]]; then
+        /usr/bin/wp-cli theme install --path='/usr/html' $theme --url="{{ $.Values.domain }}" 
+      fi
+    fi    
 
   wp-config.php: |
     <?php 
