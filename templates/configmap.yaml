@@ -20,7 +20,7 @@ data:
     }
 
     http {
-    proxy_buffers 128 128k;
+    proxy_buffers 128 32k;
     proxy_buffer_size 32k;
             keepalive_timeout  600s;
             keepalive_requests 10000;
