@@ -355,10 +355,6 @@ data:
       sed -i "s/wp_options/$options_table/g" /tmp/autoptimize-settings.sql
       mysql -u$DATABASE_USER -p$DATABASE_PASS -h mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local $DATABASE_NAME </tmp/autoptimize-settings.sql
       rm -f /tmp/autoptimize-settings.sql
-      export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
-      if [[ "$disabledupdates" -eq 0 ]]; then
-        cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
-      fi
       rm -f /usr/html/wp-admin/plugin-editor.php
       rm -f /usr/html/wp-admin/plugin-install.php
       rm -f /usr/html/wp-admin/site-health.php
@@ -391,7 +387,7 @@ data:
     esac    
     export themeinstalled=`wp-cli --path=/usr/html theme is-active $theme`
     if [[ $themeinstalled -ne 1 ]]; then
-      if [[ $theme_is_url -eq 1 ]]; then
+      if [[ $theme_is_url -eq "1" ]]; then
         /usr/bin/wp-cli theme install $themeurl --path='/usr/html' --url="{{ $.Values.domain }}"
         sed -i 's/public $is_automatic = false;/public $is_automatic = true;/g' /usr/html/wp-content/themes/$theme/includes/plugins/class-tgm-plugin-activation.php || true 
         sed -i "s/'force_activation'   => false,/'force_activation'   => true,/g" /usr/html/wp-content/themes/$theme/includes/plugins/plugins-activation.php || true
@@ -401,6 +397,10 @@ data:
       if [[ $theme_is_url -eq 0 ]]; then
         /usr/bin/wp-cli theme install --path='/usr/html' $theme --url="{{ $.Values.domain }}"  || true
         /usr/bin/wp-cli theme activate $theme --path='/usr/html' --url="{{ $.Values.domain }}" || true
+      fi
+      export disabledupdates=`grep -c "hide update" /usr/html/wp-content/themes/$theme/functions.php`
+      if [[ "$disabledupdates" -eq 0 ]]; then
+        cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
       fi
     fi    
 
