@@ -380,6 +380,8 @@ data:
       export theme_is_url=1
       export themeurl=$theme     
       export theme=`echo $themeurl | grep -o "/[a-z0-9]*.zip"|tr -d '/'|sed 's/.zip//g'`
+      echo "Theme: $theme"
+      echo "URL: $themeurl"
       ;;
     *)
       echo "Theme does not contain a URL. Continuing."  
