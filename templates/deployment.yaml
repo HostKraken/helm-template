@@ -60,7 +60,10 @@ spec:
             claimName: wp-autoptimize-ceph-{{ include "hostkraken.domainDashed" . }}  
         - name: wp-uploads-ceph-{{ include "hostkraken.domainDashed" . }}
           persistentVolumeClaim:
-            claimName: wp-uploads-ceph-{{ include "hostkraken.domainDashed" . }}         
+            claimName: wp-uploads-ceph-{{ include "hostkraken.domainDashed" . }}   
+        - name: wp-root-ceph-{{ include "hostkraken.domainDashed" . }}   
+          persistentVolumeClaim:
+            claimName: wp-root-ceph-{{ include "hostkraken.domainDashed" . }}            
       containers:      
         - name: {{ include "hostkraken.domainDashed" . }}    
           volumeMounts:
@@ -69,7 +72,9 @@ spec:
             readOnly: true
           - name: "db-creds"
             mountPath: "/mnt/secrets-store"
-            readOnly: true         
+            readOnly: true
+          - name: wp-root-ceph-{{ include "hostkraken.domainDashed" . }}
+            mountPath: /usr/html           
           - name: config-volume
             mountPath: /configs
           - name: wp-uploads-ceph-{{ include "hostkraken.domainDashed" . }}
