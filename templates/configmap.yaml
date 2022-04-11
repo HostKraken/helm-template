@@ -344,11 +344,6 @@ data:
         sleep 10;     
       /usr/bin/wp-cli plugin deactivate hello --path=/usr/html --url="{{ $.Values.domain }}"
       /usr/bin/wp-cli plugin uninstall hello --path=/usr/html --url="{{ $.Values.domain }}"
-      {{- range $Plugins }}
-      if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="{{ $.Values.domain }}" ; then
-      /usr/bin/wp-cli plugin install --activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
-      fi
-      {{- end }}
       /usr/bin/wp-cli plugin install --activate autoptimize --path=/usr/html --url="{{ $.Values.domain }}"  || true  
       export options_table="{{- .Values.table_prefix | default "wp_" -}}options"
       cp /configs/autoptimize-settings.sql /tmp
@@ -406,6 +401,11 @@ data:
       if [[ "$disabledupdates" -eq 0 ]]; then
         cat /configs/disable-updates.php >>/usr/html/wp-content/themes/$theme/functions.php
       fi
+      {{- range $Plugins }}
+      if ! /usr/bin/wp-cli plugin is-installed {{ . }} --path='/usr/html' --url="{{ $.Values.domain }}" ; then
+      /usr/bin/wp-cli plugin install --activate {{ . }} --path=/usr/html --url="{{ $.Values.domain }}"  || true    
+      fi
+      {{- end }}      
     fi    
 
   wp-config.php: |
