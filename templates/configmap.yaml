@@ -190,7 +190,7 @@ data:
     * Use HyperDB to just use the replica for frontend reads.
     * Register the primary server to HyperDB
     */
-    $wpdb->persistent = true;
+    /**  $wpdb->persistent = true; */
     $wpdb->add_database( array(
             'host'     => "mysql-galera-local-mariadb-galera-0.mysql-galera-local-mariadb-galera-headless.mysql.svc.cluster.local",
             'user'     => "DB_USER",
