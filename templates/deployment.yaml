@@ -115,7 +115,7 @@ spec:
               command: 
               - "/bin/sh"
               - "-c"
-              - "[[ $( pgrep nginx | wc -l)  -gt 1 ]]"
+              - "[[ $( pgrep fpm | wc -l)  -gt 1 ]]"
             initialDelaySeconds: {{ add ( mul $PluginsCount 3 ) 70 }}
             periodSeconds: 5
             failureThreshold: 30
@@ -124,7 +124,7 @@ spec:
               command: 
               - "/bin/sh"
               - "-c"
-              - "[[ $( pgrep nginx | wc -l)  -gt 1 ]]"
+              - "[[ $( pgrep fpm | wc -l)  -gt 1 ]]"
             initialDelaySeconds: {{ add ( mul $PluginsCount 3 ) 70 }}
             periodSeconds: 5
             failureThreshold: 30
