@@ -78,7 +78,7 @@ spec:
             mountPath: /usr/html/wp-content/cache  
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "wordpress/6.0.1-fpm-alpine"
+          image: "registry.hostkraken.com/{{ .Values.domain }}:latest"
           imagePullPolicy: Always
           env:
           - name: AWS_ACCESS_KEY_ID
