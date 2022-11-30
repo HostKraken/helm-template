@@ -1,5 +1,5 @@
 {{- $fullName := include "hostkraken.domainDashed" . -}}
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ include "hostkraken.domainDashed" . }}
@@ -35,7 +35,7 @@ spec:
               serviceName: {{ $fullName }}
               servicePort: 80
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: webhook-ingress-{{ include "hostkraken.domainDashed" . }}
