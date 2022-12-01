@@ -66,8 +66,8 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
-      imagePullSecrets:
-      - name: registry-business-business
+#      imagePullSecrets:
+#      - name: registry-business-business
       restartPolicy: Never
       schedulerName: default-scheduler
       securityContext: {}
@@ -108,8 +108,8 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
-      imagePullSecrets:
-      - name: registry-business-business
+#      imagePullSecrets:
+#      - name: registry-business-business
       restartPolicy: Never
       schedulerName: default-scheduler
       securityContext: {}
