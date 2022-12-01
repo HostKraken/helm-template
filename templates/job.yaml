@@ -30,7 +30,7 @@ spec:
             readOnly: true
         env:
         - name: VAULT_ADDR
-          value: https://vault-0.default.svc:8200
+          value: https://vault-0.vault-internal.default.svc.cluster.local:8200
         - name: SITENAME
           value: {{ .Values.domain }}
         - name: CLOUDFLARE_EMAIL
