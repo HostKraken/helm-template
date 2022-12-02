@@ -39,6 +39,7 @@ spec:
                   secretProviderClass: "do-backup-secret"                            
           containers:
             - name: {{ include "hostkraken.domainDashed" . }}-dailybackup
+              serviceAccount: default
               env:
                 - name: DATABASE_HOST
                   value: "mysql-galera-local-mariadb-galera.mysql"
