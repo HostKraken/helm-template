@@ -11,10 +11,6 @@ spec:
       template:
         spec:
           restartPolicy: Never
-        {{- with .Values.imagePullSecrets }}
-          imagePullSecrets:
-            {{- toYaml . | nindent 13 }}
-        {{- end }}
           serviceAccountName: default
           securityContext:
             {{- toYaml .Values.podSecurityContext | nindent 13 }}
