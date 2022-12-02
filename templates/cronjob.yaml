@@ -15,7 +15,7 @@ spec:
           imagePullSecrets:
             {{- toYaml . | nindent 13 }}
         {{- end }}
-          serviceAccountName: {{ include "hostkraken.serviceAccountName" . }}
+          serviceAccountName: default
           securityContext:
             {{- toYaml .Values.podSecurityContext | nindent 13 }}
           volumes:
