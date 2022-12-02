@@ -13,7 +13,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt"
-    external-dns.alpha.kubernetes.io/hostname: "{{ .Values.domain }},www.{{ .Values.domain }}"
+    #external-dns.alpha.kubernetes.io/hostname: "{{ .Values.domain }},www.{{ .Values.domain }}"
     nginx.ingress.kubernetes.io/proxy-body-size: 128m
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
@@ -52,7 +52,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt"
-    external-dns.alpha.kubernetes.io/hostname: "{{ include "hostkraken.domainDashed" . }}-webhook.hostkraken.com"
+    #external-dns.alpha.kubernetes.io/hostname: "{{ include "hostkraken.domainDashed" . }}-webhook.hostkraken.com"
 spec:
   tls:
     - hosts:
