@@ -23,9 +23,9 @@ securityContext: {}
 resources:
   limits:
     memory: 768Mi
-    cpu: 1
+    cpu: 500m
   requests:
-    cpu: 768m
+    cpu: 500m
     memory: 768Mi
 
 domain: SETME
