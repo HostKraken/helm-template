@@ -23,10 +23,9 @@ securityContext: {}
 resources:
   limits:
     memory: 768Mi
-    cpu: 500m
-    ephemeral-storage: 1Gi
+    cpu: 250m
   requests:
-    cpu: 500m
+    cpu: 250m
     memory: 768Mi
 
 domain: SETME
